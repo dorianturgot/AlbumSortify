@@ -1,0 +1,46 @@
+const clientId = "536df2957a654a26b8d6ca940d9390ea"; // Replace with your client ID
+
+export async function fetchProfile(token) {
+    const result = await fetch("https://api.spotify.com/v1/me", {
+        method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return await result.json();
+}
+
+export async function fetchAlbums(token) {
+    const result = await fetch("https://api.spotify.com/v1/me/albums", {
+        method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return await result.json();
+}
+
+export function populateUI(profile) {
+    document.getElementById("displayName").innerText = profile.display_name;
+    if (profile.images[0]) {
+        const profileImage = new Image(50, 50);
+        profileImage.src = profile.images[0].url;
+        document.getElementById("avatar").appendChild(profileImage);
+        //document.getElementById("imgUrl").innerText = profile.images[0].url;
+    }
+    // document.getElementById("id").innerText = profile.id;
+    // document.getElementById("email").innerText = profile.email;
+    // document.getElementById("uri").innerText = profile.uri;
+    // document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
+    // document.getElementById("url").innerText = profile.href;
+    // document.getElementById("url").setAttribute("href", profile.href);
+}
+
+export function getAlbums(albums) {
+    albums.items.forEach((alb) => {
+        const albumHtml = `
+        <div class="card">
+            <a href="${alb.album.external_urls.spotify}"><img src="${alb.album.images[0].url}" alt=${alb.album.id} /></a>
+            <h3>${alb.album.name}</h3>
+            <h4>${alb.album.artists[0].name}</h4>
+        </div>
+      `
+        document.getElementById("albums").innerHTML += albumHtml;
+    });
+}

@@ -2,39 +2,44 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>My Spotify Profile</title>
+        <title>AlbumSortify</title>
         <script src="src/script.js" type="module"></script>
     </head>
     <body>
-      <h1>Display your Spotify profile data</h1>
+      <h1 id="title">AlbumSortify</h1>
 
       <section id="profile">
-      <h2>Welcome <span id="displayName"></span></h2>
-      <span id="avatar"></span>
-      <ul>
+      <div id="profileHead">
+        <h2>Welcome <span id="displayName"></span></h2>
+        <span id="avatar"></span>
+      </div>
+      <!-- <ul>
           <li>User ID: <span id="id"></span></li>
           <li>Email: <span id="email"></span></li>
           <li>Spotify URI: <a id="uri" href="#"></a></li>
           <li>Link: <a id="url" href="#"></a></li>
           <li>Profile Image: <span id="imgUrl"></span></li>
-      </ul>
-      <h1>Your saved albums</h1>
+      </ul> -->
+      <h1>Add albums</h1>
+      <form class="form">
+        <input type="text" id="searchbar" name="searchbar" class="input" value="" placeholder="Search an album..">
+      </form>
+      <div class="results" id="results"></div> 
+      <h1>Your last 20 saved albums</h1>
       <div class="albums" id="albums"></div>
-      <label for="search">Search an album: </label>
-      <input type="text" id="search" name="search" value="">
-      <input type="submit" value="Search" id="searchButton">
       </section>
     </body>
 </html>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
   body {
-    font-family: sans-serif;
+    font-family: Roboto;
     color: white;
     background-color: #292929;
   }
   h1 {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
   .card {
     width: 150px;
@@ -58,6 +63,7 @@
     margin: 5px;
     color: rgb(179, 179, 179);
     font-weight: lighter;
+    padding-bottom: 10px;
 }
 
 h3, h4 {
@@ -66,7 +72,15 @@ h3, h4 {
 }
 
 
-.albums{
+.albums {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    width: 90%;
+    display: flex;
+}
+
+.results {
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
@@ -76,6 +90,27 @@ h3, h4 {
 
 ::-webkit-scrollbar {
     display: none;
+}
+
+#profileHead {
+  display: flex;
+  align-items: center;
+}
+
+#profileHead h2 {
+  margin-right: 5px;
+}
+
+#profileHead img {
+  border-radius: 50%;
+}
+
+#title {
+  color: #1DB954;
+}
+
+#searchbar {
+  margin-bottom: 10px;
 }
 
 </style>

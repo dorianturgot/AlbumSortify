@@ -1,11 +1,15 @@
+import { getAlbums, populateUI, fetchAlbums, fetchProfile } from "./spotify.js";
+
 const clientId = "536df2957a654a26b8d6ca940d9390ea"; // Replace with your client ID
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
+var token;
 
 if (!code) {
     redirectToAuthCodeFlow(clientId);
 } else {
     const accessToken = await getAccessToken(clientId, code);
+    token = accessToken;
     const profile = await fetchProfile(accessToken);
     populateUI(profile);
     const albums = await fetchAlbums(accessToken);
@@ -69,47 +73,36 @@ export async function getAccessToken(clientId, code) {
     return access_token;
 }
 
-async function fetchProfile(token) {
-    const result = await fetch("https://api.spotify.com/v1/me", {
-        method: "GET", headers: { Authorization: `Bearer ${token}` }
+export async function fetchSearch(search) {
+    const query = encodeURI(search);
+    const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=album&offset=0&limit=20", {
+        method: "GET", headers: { Authorization: `Bearer ${token}`}
     });
 
     return await result.json();
 }
 
-async function fetchAlbums(token) {
-    const result = await fetch("https://api.spotify.com/v1/me/albums", {
-        method: "GET", headers: { Authorization: `Bearer ${token}` }
-    });
+export async function onSearch(search)
+{
+    const results = await fetchSearch(searchBar.value);
+    //const searchResults = document.getElementById("searchResults");
+    //const cards = document.getElementsByClassName("card");
 
-    return await result.json();
-}
+    document.getElementById("results").innerHTML = "";
+    console.log(results.albums.items[0].name);
+    console.log(search);
 
-function populateUI(profile) {
-    document.getElementById("displayName").innerText = profile.display_name;
-    if (profile.images[0]) {
-        const profileImage = new Image(200, 200);
-        profileImage.src = profile.images[0].url;
-        document.getElementById("avatar").appendChild(profileImage);
-        document.getElementById("imgUrl").innerText = profile.images[0].url;
-    }
-    document.getElementById("id").innerText = profile.id;
-    document.getElementById("email").innerText = profile.email;
-    document.getElementById("uri").innerText = profile.uri;
-    document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
-    document.getElementById("url").innerText = profile.href;
-    document.getElementById("url").setAttribute("href", profile.href);
-}
-
-function getAlbums(albums) {
-    albums.items.forEach((alb) => {
-        const albumHtml = `
+    results.albums.items.forEach((alb) => {
+        const resultsHtml = `
         <div class="card">
-            <a href="${alb.album.external_urls.spotify}"><img src="${alb.album.images[0].url}" alt=${alb.album.id} /></a>
-            <h3>${alb.album.name}</h3>
-            <h4>${alb.album.artists[0].name}</h4>
+            <a href="${alb.external_urls.spotify}"><img src="${alb.images[0].url}" alt=${alb.id} /></a>
+            <h3>${alb.name}</h3>
+            <h4>${alb.artists[0].name}</h4>
         </div>
       `
-        document.getElementById("albums").innerHTML += albumHtml;
+        document.getElementById("results").innerHTML += resultsHtml;
     });
 }
+console.log("yooo!!")
+const searchBar = document.getElementById("searchbar");
+searchBar.addEventListener("input", onSearch);
