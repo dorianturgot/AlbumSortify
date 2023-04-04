@@ -10,11 +10,9 @@ fetch("http://localhost:3000/list/" + userIDSpotify, {
   },
 })
 .then(response => {
-  console.log(response);
   return response.json();
 })
 .then(data => {
-  console.log(data);
   const albumList = document.getElementById('albumList');
   data.forEach(album => {
     const albumDiv = document.createElement('div');

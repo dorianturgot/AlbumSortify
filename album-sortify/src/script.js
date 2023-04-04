@@ -16,8 +16,8 @@ if (!code) {
     localStorage.setItem('userIDSpotify', profile.id);
     populateUI(profile);
     const albums = await fetchAlbums(accessToken);
-    console.log(albums);
     getAlbums(albums);
+    await fetchLists(userIDSpotify);
 }
 
 export async function redirectToAuthCodeFlow(clientId) {
@@ -78,7 +78,7 @@ export async function getAccessToken(clientId, code) {
 
 export async function fetchSearch(search) {
     const query = encodeURI(search);
-    const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=album&offset=0&limit=5", {
+    const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=album&offset=0&limit=6", {
         method: "GET", headers: { Authorization: `Bearer ${token}`}
     });
 
@@ -221,6 +221,45 @@ export function getAlbums(albums) {
     albumCard.appendChild(addAlbumBtn);
 
     document.getElementById("albums").appendChild(albumCard);
+  });
+}
+
+export async function fetchLists(userIDSpotify) {
+  fetch(`http://localhost:3000/albumlist/${userIDSpotify}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+        getLists(data);
+    });
+}
+
+
+export function getLists(lists) {
+  console.log(lists);
+  lists.forEach((albumlist) => {
+    const listCard = document.createElement("div");
+    listCard.classList.add("listCard");
+
+    const listCover = document.createElement("div");
+    listCover.setAttribute("class", "listCover");
+    listCover.style.backgroundColor = albumlist.color;
+    listCover.addEventListener("click", () => {
+      window.open("list.html", "_blank");
+    });
+
+    const listName = document.createElement("h3");
+    listName.textContent = albumlist.name;
+
+    listCard.appendChild(listCover);
+    listCard.appendChild(listName);
+
+    document.getElementById("lists").appendChild(listCard);
   });
 }
 

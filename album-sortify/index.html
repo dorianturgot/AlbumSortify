@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <title>AlbumSortify</title>
         <script src="src/script.js" type="module"></script>
+        <script src="src/modal.js" type="module"></script>
     </head>
     <body>
       <h1 id="title">AlbumSortify</h1>
@@ -11,6 +12,19 @@
       <div id="profileHead">
         <h2>Welcome <span id="displayName"></span></h2>
         <span id="avatar"></span>
+      </div>
+      <h1>Lists</h1>
+      <button id="newListBtn">Create a new list</button>
+      <div class="listContainer" id="lists"></div>
+      <div id="newListModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h1 class="modalText">Create a new list</h1>
+          <hr>
+          <input id="newListName" type="text" placeholder="Enter the name of your list">
+          <h5 class="modalText">Choose a color<input type="color" id="colorPicker"></h5>
+          <button id="confirmBtnNewList">Confirm</button>
+        </div>    
       </div>
       <a href="list.html"><h1>Your list</h1></a>
       <h1>Add albums</h1>
@@ -26,6 +40,7 @@
     font-family: sans-serif;
     color: white;
     background-color: #292929;
+    margin-left: 30px;
   }
   h1 {
     padding-top: 10px;
@@ -41,6 +56,12 @@
     width: 130px;
     height: 130px;
     border-radius: 4px;
+    cursor: pointer;
+}
+
+.card img:hover {
+  transform: scale(1.05);
+  border-radius: 0%;
 }
 
 .card h3 {
@@ -63,6 +84,14 @@ h3, h4 {
 
 
 .albums {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    width: 90%;
+    display: flex;
+}
+
+.lists {
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
@@ -100,7 +129,122 @@ h3, h4 {
 }
 
 #searchbar {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+#newListBtn {
+  background-color: #1DB954;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 0px;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+#newListBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal dialog box CSS */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 400px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modalText {
+  color: black;
+}
+
+#confirmBtnNewList {
+  background-color: #1DB954;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+#confirmBtnNewLis:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+#colorPicker {
+  margin-left: 10px;
+}
+
+.listContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.listCover {
+  background-image: url("src/assets/listPlaceholder.png");
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0.5px solid rgb(56, 56, 56);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.listCover:hover {
+  transform: scale(1.04);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.listCard h3 {
+  font-size: 20px;
+  text-align: center;
+  font-family: 'Times New Roman', Times, serif;
+  color: #fff;
+  text-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+}
+
+.listCard {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
 }
 
 </style>

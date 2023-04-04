@@ -21,12 +21,9 @@ connection.connect((err) => {
   console.log('Connected to MySQL database.');
 });
 
-
-
-
 app.get('/list/:userID', (req, res) => {
   const userID = req.params.userID;
-  const sql = `SELECT * FROM albumlist WHERE userID = \'${userID}\'`;
+  const sql = `SELECT * FROM album WHERE userID = \'${userID}\'`;
 
   connection.query(sql, (err, result) => {
     if (err) throw err;
@@ -35,11 +32,34 @@ app.get('/list/:userID', (req, res) => {
   });
 });
 
+app.get('/albumlist/:userID', (req, res) => {
+  const userID = req.params.userID;
+  const sql = `SELECT * FROM albumlist WHERE userID = \'${userID}\' ORDER BY date_created DESC`;
+
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    res.setHeader('Content-Type', 'application/json'); // set content type to JSON
+    res.send(result);
+  });
+});
+
+app.post('/albumlist', (req, res) => {
+  const { userID, name, color } = req.body;
+  const query = 'INSERT INTO albumlist (userID, name, color) VALUES (?, ?, ?)';
+  connection.query(query, [userID, name, color], (err, result) => {
+    if (err) {
+      console.error('Error creating new list:', err);
+      res.status(500).json({ error: 'Error creating list.' });
+    } else {
+      res.status(200).json({ userID, name, color });
+    }
+  });
+});
 
 
 app.post('/albums', (req, res) => {
   const { userID, name, artist, picture_url, url, releaseDate, spotifyID } = req.body;
-  const query = 'INSERT INTO albumlist (userID, name, artist, picture_url, url, releaseDate, spotifyID) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const query = 'INSERT INTO album (userID, name, artist, picture_url, url, releaseDate, spotifyID) VALUES (?, ?, ?, ?, ?, ?, ?)';
   connection.query(query, [userID, name, artist, picture_url, url, releaseDate, spotifyID], (err, result) => {
     if (err) {
       console.error('Error adding new album:', err);
