@@ -182,7 +182,7 @@ export function getAlbums(albums) {
     addAlbumBtn.addEventListener("click", (event) => {
       const albumCard = event.target.closest(".card");
       const albumName = albumCard.querySelector("h3").textContent;
-      const albumId = albumCard.querySelector("img").alt;
+      const albumId = albumCard.querySelector("img").alt; 
 
       fetch("http://localhost:3000/albums", {
         method: "POST",
@@ -239,8 +239,8 @@ export async function fetchLists(userIDSpotify) {
     });
 }
 
-
 export function getLists(lists) {
+  document.getElementById("lists").innerHTML = "";
   console.log(lists);
   lists.forEach((albumlist) => {
     const listCard = document.createElement("div");
@@ -259,7 +259,8 @@ export function getLists(lists) {
     listCard.appendChild(listCover);
     listCard.appendChild(listName);
 
-    document.getElementById("lists").appendChild(listCard);
+    document.getElementById("lists").innerHTML += listCard.outerHTML;
+    //document.getElementById("lists").appendChild(listCard);
   });
 }
 

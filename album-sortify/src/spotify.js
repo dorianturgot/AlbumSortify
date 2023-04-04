@@ -18,12 +18,10 @@ export async function fetchAlbums(token) {
 
 export function populateUI(profile) {
     document.getElementById("displayName").innerText = profile.display_name;
-    if (profile.images[0]) {
-        const profileImage = new Image(50, 50);
-        profileImage.src = profile.images[0].url;
-        document.getElementById("avatar").appendChild(profileImage);
+    const profileImage = new Image(50, 50);
+    profileImage.src = profile.images[0].url;
+    document.getElementById("avatar").appendChild(profileImage);
         //document.getElementById("imgUrl").innerText = profile.images[0].url;
-    }
     // document.getElementById("id").innerText = profile.id;
     // document.getElementById("email").innerText = profile.email;
     // document.getElementById("uri").innerText = profile.uri;

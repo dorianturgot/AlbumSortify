@@ -1,3 +1,5 @@
+import { fetchLists } from "./script.js";
+
 var modal = document.getElementById("newListModal");
 
 // Get the button that opens the modal
@@ -9,6 +11,7 @@ var span = document.getElementsByClassName("close")[0];
 // When the user clicks on the button, open the modal
 btn.onclick = function() {
   modal.style.display = "block";
+  document.getElementById("newListName").value = "";
 }
 
 confirmBtnNewList.onclick = function() {
@@ -38,6 +41,7 @@ confirmBtnNewList.onclick = function() {
           console.log("New list added:", data);
           alert("List created successfully!");
           modal.style.display = "none";
+          fetchLists(userIDSpotify);
         })
         .catch((error) => {
           console.error("Error adding new list:", error);
