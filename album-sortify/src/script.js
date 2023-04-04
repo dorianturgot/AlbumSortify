@@ -1,10 +1,10 @@
-import { getAlbums, populateUI, fetchAlbums, fetchProfile } from "./spotify.js";
+import { populateUI, fetchAlbums, fetchProfile } from "./spotify.js";
 
 const clientId = "536df2957a654a26b8d6ca940d9390ea"; // Replace with your client ID
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 var token;
-var userIDSpotify;
+export var userIDSpotify;
 
 if (!code) {
     redirectToAuthCodeFlow(clientId);
@@ -13,6 +13,7 @@ if (!code) {
     token = accessToken;
     const profile = await fetchProfile(accessToken);
     userIDSpotify = profile.id;
+    localStorage.setItem('userIDSpotify', profile.id);
     populateUI(profile);
     const albums = await fetchAlbums(accessToken);
     console.log(albums);
@@ -122,6 +123,11 @@ export async function onSearch(search) {
         body: JSON.stringify({
           userID: userIDSpotify,
           name: albumName,
+          artist: alb.artists[0].name,
+          picture_url: alb.images[0].url,
+          url: alb.external_urls.spotify,
+          releaseDate: alb.release_date,
+          spotifyID: alb.id,
         }),
       })
         .then((response) => {
@@ -149,11 +155,72 @@ export async function onSearch(search) {
   });
 }
 
-
-
-
 const searchBar = document.getElementById("searchbar");
 searchBar.addEventListener("input", onSearch);
 
-// script.js
+
+export function getAlbums(albums) {
+  albums.items.forEach((alb) => {
+    const albumCard = document.createElement("div");
+    albumCard.classList.add("card");
+
+    const albumImage = document.createElement("img");
+    albumImage.src = alb.album.images[0].url;
+    albumImage.alt = alb.album.id;
+    albumImage.addEventListener("click", () => {
+      window.open(alb.album.external_urls.spotify, "_blank");
+    });
+
+    const albumTitle = document.createElement("h3");
+    albumTitle.textContent = alb.album.name;
+
+    const albumArtist = document.createElement("h4");
+    albumArtist.textContent = alb.album.artists[0].name;
+
+    const addAlbumBtn = document.createElement("button");
+    addAlbumBtn.textContent = "Add";
+    addAlbumBtn.addEventListener("click", (event) => {
+      const albumCard = event.target.closest(".card");
+      const albumName = albumCard.querySelector("h3").textContent;
+      const albumId = albumCard.querySelector("img").alt;
+
+      fetch("http://localhost:3000/albums", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userID: userIDSpotify,
+          name: albumName,
+          artist: alb.album.artists[0].name,
+          picture_url: alb.album.images[0].url,
+          url: alb.album.external_urls.spotify,
+          releaseDate: alb.album.release_date,
+          spotifyID: alb.album.id,
+        }),
+      })
+        .then((response) => {
+          if (response.status === 500) {
+            throw new Error("Server Error");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("New album added:", data);
+          alert("Album added successfully!");
+        })
+        .catch((error) => {
+          console.error("Error adding new album:", error);
+          alert("Error adding album.");
+        });
+    });
+
+    albumCard.appendChild(albumImage);
+    albumCard.appendChild(albumTitle);
+    albumCard.appendChild(albumArtist);
+    albumCard.appendChild(addAlbumBtn);
+
+    document.getElementById("albums").appendChild(albumCard);
+  });
+}
 

@@ -21,15 +21,31 @@ connection.connect((err) => {
   console.log('Connected to MySQL database.');
 });
 
+
+
+
+app.get('/list/:userID', (req, res) => {
+  const userID = req.params.userID;
+  const sql = `SELECT * FROM albumlist WHERE userID = \'${userID}\'`;
+
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    res.setHeader('Content-Type', 'application/json'); // set content type to JSON
+    res.send(result);
+  });
+});
+
+
+
 app.post('/albums', (req, res) => {
-  const { userID, name } = req.body;
-  const query = 'INSERT INTO albumlist (userID, name) VALUES (?, ?)';
-  connection.query(query, [userID, name], (err, result) => {
+  const { userID, name, artist, picture_url, url, releaseDate, spotifyID } = req.body;
+  const query = 'INSERT INTO albumlist (userID, name, artist, picture_url, url, releaseDate, spotifyID) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  connection.query(query, [userID, name, artist, picture_url, url, releaseDate, spotifyID], (err, result) => {
     if (err) {
       console.error('Error adding new album:', err);
       res.status(500).json({ error: 'Error adding album.' });
     } else {
-      res.status(200).json({ userID, name });
+      res.status(200).json({ userID, name, artist, picture_url, url, releaseDate, spotifyID});
     }
   });
 });

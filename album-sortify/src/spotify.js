@@ -31,16 +31,3 @@ export function populateUI(profile) {
     // document.getElementById("url").innerText = profile.href;
     // document.getElementById("url").setAttribute("href", profile.href);
 }
-
-export function getAlbums(albums) {
-    albums.items.forEach((alb) => {
-        const albumHtml = `
-        <div class="card">
-            <a href="${alb.album.external_urls.spotify}"><img src="${alb.album.images[0].url}" alt=${alb.album.id} /></a>
-            <h3>${alb.album.name}</h3>
-            <h4>${alb.album.artists[0].name}</h4>
-        </div>
-      `
-        document.getElementById("albums").innerHTML += albumHtml;
-    });
-}
