@@ -48,6 +48,11 @@ confirmBtnUpdateList.onclick = function() {
   const newListName = document.getElementById("newListName").value;
   const colorPicker = document.getElementById("colorPicker").value;
 
+  if(newListName === "") {
+    alert("Please enter a name for the list.");
+    return;
+  }
+
   fetch("http://localhost:3000/albumlist/" + listID, {
       method: "PUT",
       headers: {
@@ -74,7 +79,7 @@ confirmBtnUpdateList.onclick = function() {
         console.error("Error updating list:", error);
         alert("Error updating list.");
       });
-    }
+}
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {

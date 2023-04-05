@@ -19,6 +19,15 @@ confirmBtnNewList.onclick = function() {
     const newListName = document.getElementById("newListName").value;
     const colorPicker = document.getElementById("colorPicker").value;
 
+    if(newListName === "") {
+      alert("Please enter a name for the list.");
+      return;
+    }
+    if(newListName.length > 40) {
+      alert("List name must be less than 40 characters.");
+      return;
+    }
+
     fetch("http://localhost:3000/albumlist", {
         method: "POST",
         headers: {

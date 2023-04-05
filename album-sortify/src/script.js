@@ -1,4 +1,4 @@
-import { populateUI, fetchAlbums, fetchProfile } from "./spotify.js";
+import { populateUI, fetchAlbums, fetchProfile, fetchNewReleases } from "./spotify.js";
 
 // ----- Spotify API requirements ----- //
 const clientId = "536df2957a654a26b8d6ca940d9390ea"; // Replace with your client ID
@@ -18,6 +18,9 @@ if (!code) {
     populateUI(profile);
     const albums = await fetchAlbums(accessToken);
     getAlbums(albums);
+    const newReleases = await fetchNewReleases(accessToken);
+    console.log(newReleases);
+    getLastReleases(newReleases);
     await fetchLists(userIDSpotify);
 }
 
@@ -230,6 +233,81 @@ export function getAlbums(albums) {
 
     document.getElementById("albums").appendChild(albumCard);
   });
+}
+
+// Gets lasts releases from Spotify and displays them
+export function getLastReleases(newAlbums) {
+  newAlbums.albums.items.forEach((alb) => {
+    const albumCard = document.createElement("div");
+    albumCard.classList.add("card");
+
+    const albumImage = document.createElement("img");
+    albumImage.src = alb.images[0].url;
+    albumImage.alt = alb.id;
+    albumImage.addEventListener("click", () => {
+      window.open(alb.album.external_urls.spotify, "_blank");
+    });
+
+    const albumTitle = document.createElement("h3");
+    albumTitle.textContent = alb.name;
+
+    const albumArtist = document.createElement("h4");
+    albumArtist.textContent = alb.artists[0].name;
+
+    const typeAlbum = document.createElement("h4");
+    typeAlbum.textContent = capitalizeFirstLetter(alb.album_type);
+
+    const addAlbumBtn = document.createElement("button");
+    addAlbumBtn.textContent = "Add";
+    addAlbumBtn.addEventListener("click", (event) => {
+      const albumCard = event.target.closest(".card");
+      const albumName = albumCard.querySelector("h3").textContent;
+      const albumId = albumCard.querySelector("img").alt; 
+
+      fetch("http://localhost:3000/albums", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userID: userIDSpotify,
+          name: albumName,
+          artist: alb.album.artists[0].name,
+          picture_url: alb.album.images[0].url,
+          url: alb.album.external_urls.spotify,
+          releaseDate: alb.album.release_date,
+          spotifyID: alb.album.id,
+        }),
+      })
+        .then((response) => {
+          if (response.status === 500) {
+            throw new Error("Server Error");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("New album added:", data);
+          alert("Album added successfully!");
+        })
+        .catch((error) => {
+          console.error("Error adding new album:", error);
+          alert("Error adding album.");
+        });
+    });
+
+    albumCard.appendChild(albumImage);
+    albumCard.appendChild(albumTitle);
+    albumCard.appendChild(albumArtist);
+    albumCard.appendChild(typeAlbum);
+    albumCard.appendChild(addAlbumBtn);
+
+    document.getElementById("newReleases").appendChild(albumCard);
+  });
+}
+
+// Capitalize first letter of a string
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 // Gets every lists from the user
