@@ -1,5 +1,6 @@
 import { populateUI, fetchAlbums, fetchProfile } from "./spotify.js";
 
+// ----- Spotify API requirements ----- //
 const clientId = "536df2957a654a26b8d6ca940d9390ea"; // Replace with your client ID
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
@@ -76,6 +77,11 @@ export async function getAccessToken(clientId, code) {
     return access_token;
 }
 
+// --------------------- End of Spotify API requirements ---------------------
+
+// --------------------- Start of Spotify API functions ---------------------
+
+// Fetches the user's profile
 export async function fetchSearch(search) {
     const query = encodeURI(search);
     const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=album&offset=0&limit=6", {
@@ -85,6 +91,7 @@ export async function fetchSearch(search) {
     return await result.json();
 }
 
+// Results from search and adds them to the page
 export async function onSearch(search) {
   const results = await fetchSearch(searchBar.value);
   const resultsContainer = document.getElementById("results");
@@ -155,10 +162,11 @@ export async function onSearch(search) {
   });
 }
 
+// Search bar
 const searchBar = document.getElementById("searchbar");
 searchBar.addEventListener("input", onSearch);
 
-
+// Gets users's liked albums and displays them
 export function getAlbums(albums) {
   albums.items.forEach((alb) => {
     const albumCard = document.createElement("div");
@@ -224,6 +232,7 @@ export function getAlbums(albums) {
   });
 }
 
+// Gets every lists from the user
 export async function fetchLists(userIDSpotify) {
   fetch(`http://localhost:3000/albumlist/${userIDSpotify}`, {
     method: "GET",
@@ -239,6 +248,7 @@ export async function fetchLists(userIDSpotify) {
     });
 }
 
+// Displays every lists from the user
 export function getLists(lists) {
   document.getElementById("lists").innerHTML = "";
   console.log(lists);
@@ -262,7 +272,6 @@ export function getLists(lists) {
     listCard.appendChild(listName);
 
     document.getElementById("lists").innerHTML += listCard.outerHTML;
-    //document.getElementById("lists").appendChild(listCard);
   });
 }
 

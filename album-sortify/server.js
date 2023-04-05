@@ -21,6 +21,7 @@ connection.connect((err) => {
   console.log('Connected to MySQL database.');
 });
 
+// GET - get all albums from a list for a user
 app.get('/list/:listID', (req, res) => {
   const listID = req.params.listID;
   const userID = req.query.userID;
@@ -34,6 +35,7 @@ app.get('/list/:listID', (req, res) => {
   });
 });
 
+// GET - get all lists for a user
 app.get('/albumlist/:userID', (req, res) => {
   const userID = req.params.userID;
   const sql = `SELECT * FROM albumlist WHERE userID = \'${userID}\' ORDER BY date_created DESC`;
@@ -45,6 +47,7 @@ app.get('/albumlist/:userID', (req, res) => {
   });
 });
 
+// POST - create a new list
 app.post('/albumlist', (req, res) => {
   const { userID, name, color } = req.body;
   const query = 'INSERT INTO albumlist (userID, name, color) VALUES (?, ?, ?)';
@@ -58,7 +61,7 @@ app.post('/albumlist', (req, res) => {
   });
 });
 
-
+// POST - add an album to a list
 app.post('/albums', (req, res) => {
   const { userID, name, artist, picture_url, url, releaseDate, spotifyID } = req.body;
   const query = 'INSERT INTO album (userID, name, artist, picture_url, url, releaseDate, spotifyID) VALUES (?, ?, ?, ?, ?, ?, ?)';
