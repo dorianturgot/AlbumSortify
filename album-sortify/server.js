@@ -21,9 +21,11 @@ connection.connect((err) => {
   console.log('Connected to MySQL database.');
 });
 
-app.get('/list/:userID', (req, res) => {
-  const userID = req.params.userID;
-  const sql = `SELECT * FROM album WHERE userID = \'${userID}\'`;
+app.get('/list/:listID', (req, res) => {
+  const listID = req.params.listID;
+  const userID = req.query.userID;
+  console.log(userID);
+  const sql = `SELECT * FROM album WHERE listID = \'${listID}\' AND userID = \'${userID}\'`;
 
   connection.query(sql, (err, result) => {
     if (err) throw err;

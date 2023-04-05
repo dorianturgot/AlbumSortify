@@ -1,9 +1,12 @@
 const userIDSpotify = localStorage.getItem('userIDSpotify');
 const albumListDiv = document.querySelector("#album-list");
 
+const queryParams = new URLSearchParams(window.location.search);
+const listID = queryParams.get('listID');
+
 console.log('userIDSpotify = ' + userIDSpotify);
 
-fetch("http://localhost:3000/list/" + userIDSpotify, {
+fetch("http://localhost:3000/list/" + listID + "?userID=" + userIDSpotify, {
   method: "GET",
   headers: {
     "Content-Type": "application/json",
@@ -23,4 +26,4 @@ fetch("http://localhost:3000/list/" + userIDSpotify, {
   });
 })
 .catch(error => console.error(error));
-
+  

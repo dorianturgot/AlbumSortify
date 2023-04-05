@@ -249,14 +249,16 @@ export function getLists(lists) {
     const listCover = document.createElement("div");
     listCover.setAttribute("class", "listCover");
     listCover.style.backgroundColor = albumlist.color;
-    listCover.addEventListener("click", () => {
-      window.open("list.html", "_blank");
-    });
+
+    const linkPage = document.createElement("a");
+    linkPage.href = "list.html?listID=" + albumlist.id;
 
     const listName = document.createElement("h3");
     listName.textContent = albumlist.name;
 
-    listCard.appendChild(listCover);
+    linkPage.innerHTML = listCover.outerHTML;
+
+    listCard.appendChild(linkPage);
     listCard.appendChild(listName);
 
     document.getElementById("lists").innerHTML += listCard.outerHTML;
