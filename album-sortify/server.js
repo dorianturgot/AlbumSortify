@@ -25,7 +25,6 @@ connection.connect((err) => {
 app.get('/list/:listID', (req, res) => {
   const listID = req.params.listID;
   const userID = req.query.userID;
-  console.log(userID);
   const sql = `SELECT * FROM album WHERE listID = \'${listID}\' AND userID = \'${userID}\'`;
 
   connection.query(sql, (err, result) => {
@@ -74,6 +73,23 @@ app.post('/albums', (req, res) => {
     }
   });
 });
+
+// PUT - update an albumlist name or color
+app.put('/albumlist/:listID', (req, res) => {
+  const listID = req.params.listID;
+  const { name, color } = req.body;
+  const sql = `UPDATE albumlist SET name=?, color=? WHERE id=?`;
+
+  connection.query(sql, [name, color, listID], (err, result) => {
+    if (err) {
+      console.error('Error updating albumlist:', err);
+      res.status(500).json({ error: 'Error updating albumlist.' });
+    } else {
+      res.status(200).json({ listID, name, color });
+    }
+  });
+});
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
