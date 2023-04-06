@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AlbumSortify</title>
+  </head>
+  <body>
+    <header>
+      <div class="navbar navbar-dark bg-dark box-shadow">
+        <div class="container d-flex justify-content-between">
+          <a href="#" class="navbar-brand d-flex align-items-center">
+            <h3>Album<span class="title">Sortify</span></h3>
+          </a>
+            <button  class="btn btn-danger" id="logoutBtn">Logout</button>
+        </div>
+    </header>
+    <div class="container py-4 px-3 mx-auto">
+      <h2>Welcome <span id="displayName"></span><span id="avatar"></span></h2>
+    </div>
+    <div class="container py-4 px-3 mx-auto">
+      <h2>Your lists</h2>
+      <button class="btn btn-success my-2">Create a new list</button>
+      <div class="container py-4 px-3 mx-auto">
+        <div class="card-deck listContainer" id="lists"></div>
+      </div>
+    </div>
+    <hr class="hr" style="width:50%; margin: auto;"/>
+    <div class="container py-4 px-3 mx-auto">
+      <h2>Add an album</h2>
+      <input type="text" class="form-control searchbar" id="searchbar" name="searchbar" class="input" value="" placeholder="Search an album..">
+      <div class="container-fluid py-2 overflowContainer">
+        <div class="d-flex flex-row flex-nowrap results" id="results"></div>
+      </div>
+    </div>
+    <div class="container py-4 px-3 mx-auto">
+      <h2>Your saved albums</h2>
+      <div class="container-fluid py-2 overflowContainer">
+        <div class="d-flex flex-row flex-nowrap albums" id="albums"></div>
+      </div>
+    </div>
+    <div class="container py-4 px-3 mx-auto">
+      <h2>New releases</h2>
+      <div class="container-fluid py-2 overflowContainer">
+        <div class="d-flex flex-row flex-nowrap albums" id="newReleases"></div>
+      </div>
+    </div>
+    <div class="container py-4 px-3 mx-auto">
+      <h2>Search artists</h2>
+      <input type="text" class="form-control searchbar input" id="searchbarArtists" name="searchbarArtists" class="input" value="" placeholder="Search an artist..">
+      <div class="container-fluid py-2 overflowContainer">
+        <div class="d-flex flex-row flex-nowrap results" id="resultsArtists"></div>
+      </div>
+    </div>
+    <script type="module" src="./js/main.js"></script>
+    <script type="module" src="./js/script.js"></script>
+  </body>
+</html>

@@ -1,5 +1,5 @@
 import { populateUI, fetchAlbums, fetchProfile, fetchNewReleases } from "./spotify.js";
-import { openAddToListModal } from "./addtolist.js";
+//import { openAddToListModal } from "./addtolist.js";
 
 // --------------------- Start of Spotify API requirements --------------------- //
 
@@ -39,7 +39,6 @@ if (!code && !accessToken) {
     const albums = await fetchAlbums(accessToken);
     getAlbums(albums);
     const newReleases = await fetchNewReleases(accessToken);
-    console.log(newReleases);
     getLastReleases(newReleases);
     await fetchLists(userIDSpotify);
 }
@@ -125,6 +124,8 @@ export async function onSearch(search) {
   results.albums.items.forEach((alb) => {
     const albumCard = document.createElement("div");
     albumCard.classList.add("card");
+    albumCard.classList.add("cardList");
+    albumCard.classList.add("card-body");
 
     const albumImage = document.createElement("img");
     albumImage.src = alb.images[0].url;
@@ -134,6 +135,7 @@ export async function onSearch(search) {
     });
 
     const albumTitle = document.createElement("h3");
+    albumTitle.classList.add("card-title");
     albumTitle.textContent = alb.name;
 
     const albumArtist = document.createElement("h4");
@@ -141,14 +143,17 @@ export async function onSearch(search) {
 
     const addAlbumBtn = document.createElement("button");
     addAlbumBtn.textContent = "Add";
+    addAlbumBtn.classList.add("btn");
+    addAlbumBtn.classList.add("btn-success");
+    addAlbumBtn.classList.add("addBtn");
     addAlbumBtn.addEventListener("click", (event) => {
       openAddToListModal(alb);
     });
 
+    albumCard.appendChild(addAlbumBtn);
     albumCard.appendChild(albumImage);
     albumCard.appendChild(albumTitle);
     albumCard.appendChild(albumArtist);
-    albumCard.appendChild(addAlbumBtn);
     resultsContainer.appendChild(albumCard);
   });
 }
@@ -166,7 +171,6 @@ export async function fetchSearchArtist(search) {
 // Results from searchArtist and adds them to the page
 export async function onSearchArtist(search) {
   const results = await fetchSearchArtist(searchbarArtists.value);
-  console.log(results);
   const resultsContainer = document.getElementById("resultsArtists");
 
   resultsContainer.innerHTML = "";
@@ -174,6 +178,8 @@ export async function onSearchArtist(search) {
   results.artists.items.forEach((alb) => {
   const albumCard = document.createElement("div");
   albumCard.classList.add("card");
+  albumCard.classList.add("cardList");
+  albumCard.classList.add("card-body");
 
   const albumImage = document.createElement("img");
   albumImage.src = alb.images[0].url;
@@ -185,24 +191,17 @@ export async function onSearchArtist(search) {
   const albumTitle = document.createElement("h3");
   albumTitle.textContent = alb.name;
 
-  const addAlbumBtn = document.createElement("button");
-  addAlbumBtn.textContent = "Add";
-  addAlbumBtn.addEventListener("click", (event) => {
-    openAddToListModal(alb);
-  });
-
   albumCard.appendChild(albumImage);
   albumCard.appendChild(albumTitle);
-  albumCard.appendChild(addAlbumBtn);
   resultsContainer.appendChild(albumCard);
 });
 }
 
-// Search bar
+// // Search bar
 const searchBar = document.getElementById("searchbar");
 searchBar.addEventListener("input", onSearch);
 
-// Search bar artist
+// // Search bar artist
 const searchbarArtists = document.getElementById("searchbarArtists");
 searchbarArtists.addEventListener("input", onSearchArtist);
 
@@ -211,6 +210,8 @@ export function getAlbums(albums) {
   albums.items.forEach((alb) => {
     const albumCard = document.createElement("div");
     albumCard.classList.add("card");
+    albumCard.classList.add("cardList");
+    albumCard.classList.add("card-body");
 
     const albumImage = document.createElement("img");
     albumImage.src = alb.album.images[0].url;
@@ -220,6 +221,7 @@ export function getAlbums(albums) {
     });
 
     const albumTitle = document.createElement("h3");
+    albumTitle.classList.add("card-title");
     albumTitle.textContent = alb.album.name;
 
     const albumArtist = document.createElement("h4");
@@ -227,14 +229,18 @@ export function getAlbums(albums) {
 
     const addAlbumBtn = document.createElement("button");
     addAlbumBtn.textContent = "Add";
+    addAlbumBtn.classList.add("btn");
+    addAlbumBtn.classList.add("btn-success");
+    addAlbumBtn.classList.add("addBtn");
     addAlbumBtn.addEventListener("click", (event) => {
       openAddToListModal(alb.album);
     });
 
+    albumCard.appendChild(addAlbumBtn);
     albumCard.appendChild(albumImage);
     albumCard.appendChild(albumTitle);
     albumCard.appendChild(albumArtist);
-    albumCard.appendChild(addAlbumBtn);
+    
 
     document.getElementById("albums").appendChild(albumCard);
   });
@@ -244,7 +250,10 @@ export function getAlbums(albums) {
 export function getLastReleases(newAlbums) {
   newAlbums.albums.items.forEach((alb) => {
     const albumCard = document.createElement("div");
+    albumCard.classList.add("cardList");
     albumCard.classList.add("card");
+    albumCard.classList.add("card-body");
+
 
     const albumImage = document.createElement("img");
     albumImage.src = alb.images[0].url;
@@ -261,18 +270,26 @@ export function getLastReleases(newAlbums) {
 
     const typeAlbum = document.createElement("h4");
     typeAlbum.textContent = capitalizeFirstLetter(alb.album_type);
+    typeAlbum.classList.add("typeAlbum");
+
+    const hr = document.createElement("hr");
+    hr.classList.add("hr");
 
     const addAlbumBtn = document.createElement("button");
     addAlbumBtn.textContent = "Add";
+    addAlbumBtn.classList.add("btn");
+    addAlbumBtn.classList.add("btn-success");
+    addAlbumBtn.classList.add("addBtn");
     addAlbumBtn.addEventListener("click", (event) => {
       openAddToListModal(alb);
     });
 
+    albumCard.appendChild(addAlbumBtn);
     albumCard.appendChild(albumImage);
     albumCard.appendChild(albumTitle);
     albumCard.appendChild(albumArtist);
+    albumCard.appendChild(hr);
     albumCard.appendChild(typeAlbum);
-    albumCard.appendChild(addAlbumBtn);
 
     document.getElementById("newReleases").appendChild(albumCard);
   });
@@ -305,16 +322,20 @@ export function getLists(lists) {
   console.log(lists);
   lists.forEach((albumlist) => {
     const listCard = document.createElement("div");
+    listCard.classList.add("card");
     listCard.classList.add("listCard");
 
     const listCover = document.createElement("div");
-    listCover.setAttribute("class", "listCover");
+    listCover.classList.add("listCover");
+    listCover.classList.add("card-img-top");
     listCover.style.backgroundColor = albumlist.color;
 
     const linkPage = document.createElement("a");
     linkPage.href = "list.html?listID=" + albumlist.id;
 
-    const listName = document.createElement("h3");
+    const listName = document.createElement("h5");
+    listName.classList.add("card-title");
+    listName.classList.add("display-1");
     listName.textContent = albumlist.name;
 
     linkPage.innerHTML = listCover.outerHTML;
