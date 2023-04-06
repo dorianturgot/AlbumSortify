@@ -165,13 +165,13 @@ export async function fetchSearchArtist(search) {
 
 // Results from searchArtist and adds them to the page
 export async function onSearchArtist(search) {
-const results = await fetchSearchArtist(searchBar.value);
-console.log(results);
-const resultsContainer = document.getElementById("resultsArtists");
+  const results = await fetchSearchArtist(searchbarArtists.value);
+  console.log(results);
+  const resultsContainer = document.getElementById("resultsArtists");
 
-resultsContainer.innerHTML = "";
+  resultsContainer.innerHTML = "";
 
-results.albums.items.forEach((alb) => {
+  results.artists.items.forEach((alb) => {
   const albumCard = document.createElement("div");
   albumCard.classList.add("card");
 
@@ -185,9 +185,6 @@ results.albums.items.forEach((alb) => {
   const albumTitle = document.createElement("h3");
   albumTitle.textContent = alb.name;
 
-  const albumArtist = document.createElement("h4");
-  albumArtist.textContent = alb.artists[0].name;
-
   const addAlbumBtn = document.createElement("button");
   addAlbumBtn.textContent = "Add";
   addAlbumBtn.addEventListener("click", (event) => {
@@ -196,7 +193,6 @@ results.albums.items.forEach((alb) => {
 
   albumCard.appendChild(albumImage);
   albumCard.appendChild(albumTitle);
-  albumCard.appendChild(albumArtist);
   albumCard.appendChild(addAlbumBtn);
   resultsContainer.appendChild(albumCard);
 });
