@@ -62,14 +62,14 @@ app.post('/albumlist', (req, res) => {
 
 // POST - add an album to a list
 app.post('/albums', (req, res) => {
-  const { userID, name, artist, picture_url, url, releaseDate, spotifyID } = req.body;
-  const query = 'INSERT INTO album (userID, name, artist, picture_url, url, releaseDate, spotifyID) VALUES (?, ?, ?, ?, ?, ?, ?)';
-  connection.query(query, [userID, name, artist, picture_url, url, releaseDate, spotifyID], (err, result) => {
+  const { userID, name, artist, picture_url, url, releaseDate, spotifyID, listID } = req.body;
+  const query = 'INSERT INTO album (userID, name, artist, picture_url, url, releaseDate, spotifyID, listID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+  connection.query(query, [userID, name, artist, picture_url, url, releaseDate, spotifyID, listID], (err, result) => {
     if (err) {
-      console.error('Error adding new album:', err);
-      res.status(500).json({ error: 'Error adding album.' });
+      console.error('Error adding new album to list :', err);
+      res.status(500).json({ error: 'Error adding album to list.' });
     } else {
-      res.status(200).json({ userID, name, artist, picture_url, url, releaseDate, spotifyID});
+      res.status(200).json({ userID, name, artist, picture_url, url, releaseDate, spotifyID, listID});
     }
   });
 });

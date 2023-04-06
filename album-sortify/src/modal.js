@@ -23,8 +23,8 @@ confirmBtnNewList.onclick = function() {
       alert("Please enter a name for the list.");
       return;
     }
-    if(newListName.length > 40) {
-      alert("List name must be less than 40 characters.");
+    if(newListName.length > 30) {
+      alert("List name must be less than 30 characters.");
       return;
     }
 

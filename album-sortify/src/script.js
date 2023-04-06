@@ -1,4 +1,5 @@
 import { populateUI, fetchAlbums, fetchProfile, fetchNewReleases } from "./spotify.js";
+import { openAddToListModal } from "./addtolist.js";
 
 // ----- Spotify API requirements ----- //
 const clientId = "536df2957a654a26b8d6ca940d9390ea"; // Replace with your client ID
@@ -121,40 +122,7 @@ export async function onSearch(search) {
     const addAlbumBtn = document.createElement("button");
     addAlbumBtn.textContent = "Add";
     addAlbumBtn.addEventListener("click", (event) => {
-      const albumCard = event.target.closest(".card");
-      const albumName = albumCard.querySelector("h3").textContent;
-      const albumId = albumCard.querySelector("img").alt;
-
-      fetch("http://localhost:3000/albums", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userID: userIDSpotify,
-          name: albumName,
-          artist: alb.artists[0].name,
-          picture_url: alb.images[0].url,
-          url: alb.external_urls.spotify,
-          releaseDate: alb.release_date,
-          spotifyID: alb.id,
-        }),
-      })
-        .then((response) => {
-          if (response.status === 500) {
-            throw new Error("Server Error: " + response.statusText);
-          } else {
-            return response.json();
-          }
-        })
-        .then((data) => {
-          console.log("New album added:", data);
-          alert("Album added successfully!");
-        })
-        .catch((error) => {
-          console.error("Error adding new album:", error);
-          alert("Error adding album.");
-        });
+      openAddToListModal(alb);
     });
 
     albumCard.appendChild(albumImage);
@@ -169,7 +137,7 @@ export async function onSearch(search) {
 const searchBar = document.getElementById("searchbar");
 searchBar.addEventListener("input", onSearch);
 
-// Gets users's liked albums and displays them
+// Gets users's liked albums, displays them and adds them to the database if wanted
 export function getAlbums(albums) {
   albums.items.forEach((alb) => {
     const albumCard = document.createElement("div");
@@ -191,39 +159,7 @@ export function getAlbums(albums) {
     const addAlbumBtn = document.createElement("button");
     addAlbumBtn.textContent = "Add";
     addAlbumBtn.addEventListener("click", (event) => {
-      const albumCard = event.target.closest(".card");
-      const albumName = albumCard.querySelector("h3").textContent;
-      const albumId = albumCard.querySelector("img").alt; 
-
-      fetch("http://localhost:3000/albums", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userID: userIDSpotify,
-          name: albumName,
-          artist: alb.album.artists[0].name,
-          picture_url: alb.album.images[0].url,
-          url: alb.album.external_urls.spotify,
-          releaseDate: alb.album.release_date,
-          spotifyID: alb.album.id,
-        }),
-      })
-        .then((response) => {
-          if (response.status === 500) {
-            throw new Error("Server Error");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log("New album added:", data);
-          alert("Album added successfully!");
-        })
-        .catch((error) => {
-          console.error("Error adding new album:", error);
-          alert("Error adding album.");
-        });
+      openAddToListModal(alb.album);
     });
 
     albumCard.appendChild(albumImage);
@@ -260,39 +196,7 @@ export function getLastReleases(newAlbums) {
     const addAlbumBtn = document.createElement("button");
     addAlbumBtn.textContent = "Add";
     addAlbumBtn.addEventListener("click", (event) => {
-      const albumCard = event.target.closest(".card");
-      const albumName = albumCard.querySelector("h3").textContent;
-      const albumId = albumCard.querySelector("img").alt; 
-
-      fetch("http://localhost:3000/albums", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userID: userIDSpotify,
-          name: albumName,
-          artist: alb.album.artists[0].name,
-          picture_url: alb.album.images[0].url,
-          url: alb.album.external_urls.spotify,
-          releaseDate: alb.album.release_date,
-          spotifyID: alb.album.id,
-        }),
-      })
-        .then((response) => {
-          if (response.status === 500) {
-            throw new Error("Server Error");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log("New album added:", data);
-          alert("Album added successfully!");
-        })
-        .catch((error) => {
-          console.error("Error adding new album:", error);
-          alert("Error adding album.");
-        });
+      openAddToListModal(alb);
     });
 
     albumCard.appendChild(albumImage);

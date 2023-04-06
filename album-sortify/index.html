@@ -28,6 +28,14 @@
           <button id="confirmBtnNewList">Confirm</button>
         </div>    
       </div>
+      <div id="addToListModal" class="addToListModal">
+        <div class="addToListModal-content">
+          <span class="closeAddToList">&times;</span>
+          <h1 class="modalText">Add to list</h1>
+          <hr>
+          <div id="addToListCollection"></div>
+        </div>    
+      </div>
       <a href="list.html?listID=1"><h1>Your list</h1></a>
       <h1>Add albums</h1>
         <input type="text" id="searchbar" name="searchbar" class="input" value="" placeholder="Search an album..">
@@ -38,8 +46,10 @@
       <div class="albums" id="newReleases"></div>
       </section>
     </body>
+    <script src="src/addtolist.js" type="module"></script>
 </html>
 <style>
 @import 'src/index.css';
 @import 'src/modal.css';
+@import 'src/addToListModal.css';
 </style>
