@@ -105,7 +105,7 @@ export async function getAccessToken(clientId, code) {
 // --------------------- Start of Spotify API functions ---------------------
 
 
-// Fetches the user's profile
+// Fetches the search from search bar
 export async function fetchSearch(search) {
     const query = encodeURI(search);
     const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=album&offset=0&limit=6", {
@@ -153,9 +153,62 @@ export async function onSearch(search) {
   });
 }
 
+// Fetches the search from search bar
+export async function fetchSearchArtist(search) {
+  const query = encodeURI(search);
+  const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=artist&offset=0&limit=6", {
+      method: "GET", headers: { Authorization: `Bearer ${token}`}
+  });
+
+  return await result.json();
+}
+
+// Results from searchArtist and adds them to the page
+export async function onSearchArtist(search) {
+const results = await fetchSearchArtist(searchBar.value);
+console.log(results);
+const resultsContainer = document.getElementById("resultsArtists");
+
+resultsContainer.innerHTML = "";
+
+results.albums.items.forEach((alb) => {
+  const albumCard = document.createElement("div");
+  albumCard.classList.add("card");
+
+  const albumImage = document.createElement("img");
+  albumImage.src = alb.images[0].url;
+  albumImage.alt = alb.id;
+  albumImage.addEventListener("click", () => {
+    window.open(alb.external_urls.spotify, "_blank");
+  });
+
+  const albumTitle = document.createElement("h3");
+  albumTitle.textContent = alb.name;
+
+  const albumArtist = document.createElement("h4");
+  albumArtist.textContent = alb.artists[0].name;
+
+  const addAlbumBtn = document.createElement("button");
+  addAlbumBtn.textContent = "Add";
+  addAlbumBtn.addEventListener("click", (event) => {
+    openAddToListModal(alb);
+  });
+
+  albumCard.appendChild(albumImage);
+  albumCard.appendChild(albumTitle);
+  albumCard.appendChild(albumArtist);
+  albumCard.appendChild(addAlbumBtn);
+  resultsContainer.appendChild(albumCard);
+});
+}
+
 // Search bar
 const searchBar = document.getElementById("searchbar");
 searchBar.addEventListener("input", onSearch);
+
+// Search bar artist
+const searchbarArtists = document.getElementById("searchbarArtists");
+searchbarArtists.addEventListener("input", onSearchArtist);
 
 // Gets users's liked albums, displays them and adds them to the database if wanted
 export function getAlbums(albums) {
