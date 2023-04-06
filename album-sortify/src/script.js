@@ -1,17 +1,36 @@
 import { populateUI, fetchAlbums, fetchProfile, fetchNewReleases } from "./spotify.js";
 import { openAddToListModal } from "./addtolist.js";
 
-// ----- Spotify API requirements ----- //
+// --------------------- Start of Spotify API requirements --------------------- //
+
 const clientId = "536df2957a654a26b8d6ca940d9390ea"; // Replace with your client ID
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 var token;
 export var userIDSpotify;
+var accessToken = localStorage.getItem('accessToken');
 
-if (!code) {
+const logoutBtn = document.getElementById("logoutBtn");
+
+logoutBtn.addEventListener("click", () => {
+  console.log("logout");
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userIDSpotify');
+    window.location.href = "http://localhost:5173/";
+});
+
+
+if (!code && !accessToken) {
+    console.log("on est dans le if");
     redirectToAuthCodeFlow(clientId);
 } else {
-    const accessToken = await getAccessToken(clientId, code);
+    if (!accessToken) {
+      console.log("on est dans le if 2");
+      accessToken = await getAccessToken(clientId, code);
+      console.log("on est dans le if 3");
+      localStorage.setItem('accessToken', accessToken);
+    }
+    console.log(accessToken);
     token = accessToken;
     const profile = await fetchProfile(accessToken);
     userIDSpotify = profile.id;
@@ -84,6 +103,7 @@ export async function getAccessToken(clientId, code) {
 // --------------------- End of Spotify API requirements ---------------------
 
 // --------------------- Start of Spotify API functions ---------------------
+
 
 // Fetches the user's profile
 export async function fetchSearch(search) {

@@ -136,3 +136,15 @@ h3, h4 {
   border-radius: 5px;
   
 }
+
+#logoutBtn {
+  background-color: #b91d1d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  margin-left: 15px;
+  }
+  

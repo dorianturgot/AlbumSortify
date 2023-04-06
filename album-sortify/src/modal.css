@@ -38,7 +38,7 @@ max-width: 400px;
 }
 
 .close {
-color: #aaa;
+color: rgb(40, 40, 40);
 float: right;
 font-size: 28px;
 font-weight: bold;
