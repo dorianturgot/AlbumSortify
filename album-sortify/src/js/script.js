@@ -1,5 +1,5 @@
-import { populateUI, fetchAlbums, fetchProfile, fetchNewReleases } from "./spotify.js";
-//import { openAddToListModal } from "./addtolist.js";
+import { populateUI, fetchAlbums, fetchProfile, fetchNewReleases, fetchTopArtists } from "./spotify.js";
+import { openAddToListModal } from "./addtolist.js";
 
 // --------------------- Start of Spotify API requirements --------------------- //
 
@@ -21,26 +21,24 @@ logoutBtn.addEventListener("click", () => {
 
 
 if (!code && !accessToken) {
-    console.log("on est dans le if");
     redirectToAuthCodeFlow(clientId);
 } else {
     if (!accessToken) {
-      console.log("on est dans le if 2");
       accessToken = await getAccessToken(clientId, code);
-      console.log("on est dans le if 3");
       localStorage.setItem('accessToken', accessToken);
     }
-    console.log(accessToken);
     token = accessToken;
     const profile = await fetchProfile(accessToken);
     userIDSpotify = profile.id;
     localStorage.setItem('userIDSpotify', profile.id);
     populateUI(profile);
+    await fetchLists(userIDSpotify);
     const albums = await fetchAlbums(accessToken);
     getAlbums(albums);
     const newReleases = await fetchNewReleases(accessToken);
     getLastReleases(newReleases);
-    await fetchLists(userIDSpotify);
+    const topArtists = await fetchTopArtists(accessToken);
+    getTopArtists(topArtists);
 }
 
 export async function redirectToAuthCodeFlow(clientId) {
@@ -53,7 +51,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     params.append("client_id", clientId);
     params.append("response_type", "code");
     params.append("redirect_uri", "http://localhost:5173/callback");
-    params.append("scope", "user-read-private user-read-email user-library-read");
+    params.append("scope", "user-read-private user-read-email user-library-read user-top-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
@@ -316,6 +314,31 @@ function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+// Gets top artists from user profile and displays them
+export function getTopArtists(topArtists) {
+  topArtists.items.forEach((alb) => {
+    const albumCard = document.createElement("div");
+    albumCard.classList.add("card");
+    albumCard.classList.add("cardList");
+    albumCard.classList.add("card-body");
+  
+    const albumImage = document.createElement("img");
+    albumImage.src = alb.images[0].url;
+    albumImage.alt = alb.id;
+    albumImage.addEventListener("click", () => {
+      window.open(alb.external_urls.spotify, "_blank");
+    });
+  
+    const albumTitle = document.createElement("h3");
+    albumTitle.textContent = alb.name;
+  
+    albumCard.appendChild(albumImage);
+    albumCard.appendChild(albumTitle);
+
+    document.getElementById("topArtists").appendChild(albumCard);
+  });
+}
+
 // Gets every lists from the user
 export async function fetchLists(userIDSpotify) {
   fetch(`http://localhost:3000/albumlist/${userIDSpotify}`, {
@@ -335,7 +358,6 @@ export async function fetchLists(userIDSpotify) {
 // Displays every lists from the user
 export function getLists(lists) {
   document.getElementById("lists").innerHTML = "";
-  console.log(lists);
   lists.forEach((albumlist) => {
     const listCard = document.createElement("div");
     listCard.classList.add("card");
