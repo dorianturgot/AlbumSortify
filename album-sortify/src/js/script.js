@@ -142,7 +142,12 @@ export async function onSearch(search) {
     albumArtist.textContent = alb.artists[0].name;
 
     const addAlbumBtn = document.createElement("button");
-    addAlbumBtn.textContent = "Add";
+    const plus = document.createElement("i");
+    plus.classList.add("fa");
+    plus.classList.add("fa-plus");
+    plus.style.color = "white";
+    addAlbumBtn.appendChild(plus);
+
     addAlbumBtn.classList.add("btn");
     addAlbumBtn.classList.add("btn-success");
     addAlbumBtn.classList.add("addBtn");
@@ -228,10 +233,16 @@ export function getAlbums(albums) {
     albumArtist.textContent = alb.album.artists[0].name;
 
     const addAlbumBtn = document.createElement("button");
-    addAlbumBtn.textContent = "Add";
+    const plus = document.createElement("i");
+    plus.classList.add("fa");
+    plus.classList.add("fa-plus");
+    plus.style.color = "white";
+    addAlbumBtn.appendChild(plus);
+
     addAlbumBtn.classList.add("btn");
     addAlbumBtn.classList.add("btn-success");
     addAlbumBtn.classList.add("addBtn");
+
     addAlbumBtn.addEventListener("click", (event) => {
       openAddToListModal(alb.album);
     });
@@ -276,7 +287,12 @@ export function getLastReleases(newAlbums) {
     hr.classList.add("hr");
 
     const addAlbumBtn = document.createElement("button");
-    addAlbumBtn.textContent = "Add";
+    const plus = document.createElement("i");
+    plus.classList.add("fa");
+    plus.classList.add("fa-plus");
+    plus.style.color = "white";
+    addAlbumBtn.appendChild(plus);
+
     addAlbumBtn.classList.add("btn");
     addAlbumBtn.classList.add("btn-success");
     addAlbumBtn.classList.add("addBtn");

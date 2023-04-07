@@ -97,9 +97,10 @@ body {
 }
 
 .cardList img:hover {
-  transform: scale(1.01);
+  //    transform: scale(1.01);
   border-radius: 0%;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .cardList h3, h4 {
@@ -151,8 +152,12 @@ body {
 }
 
 .addBtn {
-    border-radius: 0%;
-    width: 130px;
+    border-radius: 100%;
+    width: fit-content;
+    margin: 4px 2px;
+    float: right;
+    position:absolute;
+    box-shadow: 0 3px 5px  rgba(0, 0, 0, 0.2);
 }
 
 .card-body {
