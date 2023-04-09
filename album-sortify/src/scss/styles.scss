@@ -71,6 +71,10 @@ body {
     height: 100px;
   }
   
+  .listCard {
+    //background-color: #181717;
+  }
+  
   .listCard:hover {
     transform: scale(1.04);
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);

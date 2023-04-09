@@ -1,7 +1,10 @@
+import { fetchLists } from "./script";
+
 var modal = document.getElementById("addToListModal");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("closeAddToList")[0];
+export function ntm() {
+  console.log("yo");
+}
 
 // Gets every lists from the user
 function fetchListsForAlbum(userIDSpotify, alb) {
@@ -15,54 +18,87 @@ function fetchListsForAlbum(userIDSpotify, alb) {
         return response.json();
       })
       .then((data) => {
-        getListsForAlbum(data, userIDSpotify, alb);
+        getListsForAlb(data, userIDSpotify, alb);
       });
 } 
 
-    // Displays every lists from the user
-function getListsForAlbum(lists, userIDSpotify, alb) {
-    document.getElementById("addToListCollection").innerHTML = "";
-    console.log(lists);
-    const fragment = document.createDocumentFragment();
-    lists.forEach((albumlist) => {
-      const listCard = document.createElement("ul");
+// Displays every lists from the user
+export function getListsForAlb(lists, userIDSpotify, alb) {
+  document.getElementById("listModal").innerHTML = "";
+  lists.forEach((albumlist) => {
+    const listCard = document.createElement("div");
+    listCard.classList.add("card");
+    listCard.classList.add("listCard");
 
-      listCard.classList.add("listCardToAdd");
+    const listCover = document.createElement("div");
+    listCover.classList.add("listCover");
+    listCover.classList.add("card-img-top");
+    listCover.style.backgroundColor = albumlist.color;
 
-      const listNameLi = document.createElement("li");
-  
-      const listName = document.createElement("h3");
-      
-      listName.textContent = albumlist.name;
 
-      const listAddBtn = document.createElement("button");
-      listAddBtn.classList.add("addToListBtn");
-      listAddBtn.innerHTML = "Add to this list";
-
-      listAddBtn.addEventListener('click', (event) => {
-        console.log('YOOOOOOOO ????');
-        addAlbumToThisList(albumlist.id, userIDSpotify, alb);
-      });
-
-      listNameLi.appendChild(listName);
-      listNameLi.appendChild(listAddBtn);
-      listCard.appendChild(listNameLi);
-      fragment.appendChild(listCard);
+    const linkPage = document.createElement("a");
+    linkPage.style.cursor = "pointer";
+    linkPage.addEventListener("click", () => {
+      addAlbumToThisList(albumlist.id, userIDSpotify, alb);
     });
-    document.getElementById("addToListCollection").appendChild(fragment);
+
+    const listName = document.createElement("h5");
+    listName.classList.add("card-title");
+    listName.classList.add("display-1");
+    listName.textContent = albumlist.name;
+    linkPage.innerHTML = listCover.outerHTML;
+
+    listCard.appendChild(linkPage);
+    listCard.appendChild(listName);
+
+    document.getElementById("listModal").append(listCard);
+  });
 }
 
+
+
+//     // Displays every lists from the user
+// function getListsForAlbum(lists, userIDSpotify, alb) {
+//     document.getElementById("addToListCollection").innerHTML = "";
+//     const fragment = document.createDocumentFragment();
+//     lists.forEach((albumlist) => {
+//       const listCard = document.createElement("ul");
+
+//       listCard.classList.add("listCardToAdd");
+
+//       const listNameLi = document.createElement("li");
+  
+//       const listName = document.createElement("h3");
+      
+//       listName.textContent = albumlist.name;
+
+//       const listAddBtn = document.createElement("button");
+//       listAddBtn.classList.add("addToListBtn");
+//       listAddBtn.innerHTML = "Add to this list";
+
+//       listAddBtn.addEventListener('click', (event) => {
+//         addAlbumToThisList(albumlist.id, userIDSpotify, alb);
+//       });
+
+//       listNameLi.appendChild(listName);
+//       listNameLi.appendChild(listAddBtn);
+//       listCard.appendChild(listNameLi);
+//       fragment.appendChild(listCard);
+//     });
+//     document.getElementById("addToListCollection").appendChild(fragment);
+// }
+
 // When the user clicks on the button, open the modal
-export function openAddToListModal(album)
+export async function openAddToListModal(album)
 {
     const userIDSpotify = localStorage.getItem('userIDSpotify');
-    console.log('add to list userID : ' + userIDSpotify);
-    modal.style.display = "block";
-    document.getElementById("addToListCollection").value = "";
+    //await fetchLists(userIDSpotify, "listModal");
+    //modal.style.display = "block";
+    //document.getElementById("addToListCollection").value = "";
     fetchListsForAlbum(userIDSpotify, album);
 }
 
-function addAlbumToThisList(ListID, userIDSpotify, alb)
+export function addAlbumToThisList(ListID, userIDSpotify, alb)
 {
       // Make POST request to add the album to the album list
       fetch("http://localhost:3000/albums", {
@@ -90,17 +126,9 @@ function addAlbumToThisList(ListID, userIDSpotify, alb)
         .then((data) => {
           console.log("New album added to list:", data);
           alert("Album added successfully to list!");
-          modal.style.display = "none";
         })
         .catch((error) => {
           console.error("Error adding new album to list:", error);
           alert("Album already in list.");
         });
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
 }

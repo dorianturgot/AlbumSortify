@@ -33,8 +33,14 @@ export async function fetchTopArtists(token) {
 }
 
 export function populateUI(profile) {
-    document.getElementById("displayName").innerText = profile.display_name;
-    const profileImage = new Image(50, 50);
-    profileImage.src = profile.images[0].url;
-    document.getElementById("avatar").innerHTML = profileImage.outerHTML;
+    if (!profile.display_name)
+    {
+        document.getElementById("displayName").innerText = "You are not connected.";
+    }
+    else {
+        document.getElementById("displayName").innerText = "Welcome " + profile.display_name;
+        const profileImage = new Image(50, 50);
+        profileImage.src = profile.images[0].url;
+        document.getElementById("avatar").innerHTML = profileImage.outerHTML;
+    }
 }

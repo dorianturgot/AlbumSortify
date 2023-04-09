@@ -32,12 +32,22 @@ if (!code && !accessToken) {
     userIDSpotify = profile.id;
     localStorage.setItem('userIDSpotify', profile.id);
     populateUI(profile);
+    // if (!accessToken) {
+    //   accessToken = await getAccessToken(clientId, code);
+    //   localStorage.setItem('accessToken', accessToken);
+    // }
+    // token = accessToken;
+    // const profile = await fetchProfile(accessToken);
+    // userIDSpotify = profile.id;
+    // localStorage.setItem('userIDSpotify', profile.id);
+    // populateUI(profile);
     await fetchLists(userIDSpotify);
     const albums = await fetchAlbums(accessToken);
     getAlbums(albums);
     const newReleases = await fetchNewReleases(accessToken);
     getLastReleases(newReleases);
     const topArtists = await fetchTopArtists(accessToken);
+
     getTopArtists(topArtists);
 }
 
@@ -150,6 +160,7 @@ export async function onSearch(search) {
     addAlbumBtn.classList.add("btn-success");
     addAlbumBtn.classList.add("addBtn");
     addAlbumBtn.addEventListener("click", (event) => {
+      $("#addToListModal").modal('toggle');
       openAddToListModal(alb);
     });
 
@@ -242,6 +253,7 @@ export function getAlbums(albums) {
     addAlbumBtn.classList.add("addBtn");
 
     addAlbumBtn.addEventListener("click", (event) => {
+      $("#addToListModal").modal('toggle');
       openAddToListModal(alb.album);
     });
 
@@ -294,7 +306,9 @@ export function getLastReleases(newAlbums) {
     addAlbumBtn.classList.add("btn");
     addAlbumBtn.classList.add("btn-success");
     addAlbumBtn.classList.add("addBtn");
+    
     addAlbumBtn.addEventListener("click", (event) => {
+      $("#addToListModal").modal('toggle');
       openAddToListModal(alb);
     });
 
