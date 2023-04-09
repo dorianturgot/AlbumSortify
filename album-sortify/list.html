@@ -9,23 +9,35 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     </head>
     <body>
-      <h1 id="title">AlbumSortify</h1>
-      <a href="index.html"><h2>Return to homepage</h2></a>
-      <h1>Your lists</h1>
-      <button id="newListBtn">Update the list</button>
-      <div id="albumList"></div>
-      <div id="newListModal" class="modal">
-        <div class="modal-content">
-          <span class="close">&times;</span>
-          <h1 class="modalText">Update the list</h1>
-          <hr>
-          <input id="newListName" type="text" placeholder="Enter the name of your list" required>
-          <h5 class="modalText">Choose a color<input type="color" id="colorPicker"></h5>
-          <button id="confirmBtnUpdateList">Confirm</button>
+      <header>
+        <div class="navbar navbar-dark bg-dark box-shadow">
+          <div class="container d-flex justify-content-between">
+            <a href="index.html" class="navbar-brand d-flex align-items-center">
+              <h3>Album<span class="title">Sortify</span></h3>
+            </a>
+              <button  class="btn btn-danger" id="logoutBtn">Reconnect</button>
+          </div>
+      </header>
+      <div class="container py-4 px-3 mx-auto">
+        <h2>Your lists</h2>
+        <button id="newListBtn" class="btn btn-success my-2">Update the list</button>
+        <div class="container py-4 px-3 mx-auto">
+          <div id="albumList"></div>
+        </div>
+        <div id="newListModal" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h1 class="modalText">Update the list</h1>
+            <hr>
+            <input id="newListName" type="text" placeholder="Enter the name of your list" required>
+            <h5 class="modalText">Choose a color<input type="color" id="colorPicker"></h5>
+            <button id="confirmBtnUpdateList">Confirm</button>
+          </div>
         </div>
       </div>
+      <script type="module" src="src/js/main.js"></script>
+      <script src="src/js/list.js" type="module"></script>
     </body>
-    <script src="src/js/list.js" type="module"></script>
 </html>
 <style>
 @import 'src/list.css';
