@@ -6,6 +6,7 @@ const listID = queryParams.get('listID');
 
 console.log('userIDSpotify = ' + userIDSpotify);
 
+
 fetch("http://localhost:3000/list/" + listID + "?userID=" + userIDSpotify, {
   method: "GET",
   headers: {
@@ -21,11 +22,44 @@ fetch("http://localhost:3000/list/" + listID + "?userID=" + userIDSpotify, {
     const albumDiv = document.createElement('div');
     albumDiv.innerHTML = `<h3>${album.name} - ${album.artist}</h3>
                           <a href="${album.url}"><img src="${album.picture_url}" alt="${album.name}"></a>
-                          <h4>${album.releaseDate}</h4>`;
+                          <h4>${album.releaseDate}</h4>`;  
+    var deleteBtn = document.createElement('button');
+    deleteBtn.innerHTML = "Delete";
+    deleteBtn.classList.add("btn");
+    deleteBtn.classList.add("btn-danger");
+    deleteBtn.addEventListener("click", () => {
+      deleteAlbum(album.id);
+    });
+    albumDiv.append(deleteBtn);
     albumList.appendChild(albumDiv);
   });
 })
 .catch(error => console.error(error));
+
+function deleteAlbum (albumID) {
+  fetch("http://localhost:3000/albums/" + albumID, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+  .then(response => {
+    if (response.status === 500) {
+      throw new Error("Server Error: " + response.statusText);
+    } else {
+      return response.json();
+    }
+  })
+  .then(data => {
+    console.log("Album deleted:", data);
+    alert("Album deleted!");
+    window.location.href = "list.html?listID=" + listID;
+  })
+  .catch(error => {
+    console.error("Error deleting album:", error);
+    alert("Error deleting album.");
+  });
+}
 
 // ---------- UPDATING LIST -------------
 
@@ -80,6 +114,8 @@ confirmBtnUpdateList.onclick = function() {
         alert("Error updating list.");
       });
 }
+
+
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {

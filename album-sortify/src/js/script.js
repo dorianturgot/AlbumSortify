@@ -10,6 +10,8 @@ var token;
 export var userIDSpotify;
 var accessToken = localStorage.getItem('accessToken');
 
+console.log(userIDSpotify)
+
 const logoutBtn = document.getElementById("logoutBtn");
 
 logoutBtn.addEventListener("click", () => {

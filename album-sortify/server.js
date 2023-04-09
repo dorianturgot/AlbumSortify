@@ -90,6 +90,22 @@ app.put('/albumlist/:listID', (req, res) => {
   });
 });
 
+// DELETE - delete an album from a list
+app.delete('/albums/:albumID', (req, res) => {
+  const albumID = req.params.albumID;
+  const sql = `DELETE FROM album WHERE id = \'${albumID}\'`;
+
+  connection.query(sql, albumID, (err, result) => {
+    if (err) {
+      console.error('Error updating albumlist:', err);
+      res.status(500).json({ error: 'Error deleting album from list.' });
+    } else {
+      res.status(200).json({ albumID });
+    }
+  });
+});
+
+
 
 const PORT = 3000;
 app.listen(PORT, () => {
