@@ -85,10 +85,14 @@ export function addAlbumToThisList(ListID, userIDSpotify, alb)
         })
         .then((data) => {
           console.log("New album added to list:", data);
-          alert("Album added successfully to list!");
+          //alert("Album added successfully to list!");
+          document.getElementById("successAlert").classList.remove("d-none");
+          document.getElementById("failedAlert").classList.add("d-none");
         })
         .catch((error) => {
           console.error("Error adding new album to list:", error);
-          alert("Album already in list.");
+          //alert("Album already in list.");
+          document.getElementById("failedAlert").classList.remove("d-none");
+          document.getElementById("successAlert").classList.add("d-none");
         });
 }
