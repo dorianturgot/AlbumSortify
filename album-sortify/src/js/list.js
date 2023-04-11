@@ -7,7 +7,7 @@ const listID = queryParams.get('listID');
 console.log('userIDSpotify = ' + userIDSpotify);
 
 
-fetch("http://localhost:3000/list/" + listID + "?userID=" + userIDSpotify, {
+fetch("http://localhost:3000/list/" + listID, {
   method: "GET",
   headers: {
     "Content-Type": "application/json",
@@ -18,23 +18,80 @@ fetch("http://localhost:3000/list/" + listID + "?userID=" + userIDSpotify, {
 })
 .then(data => {
   const albumList = document.getElementById('albumList');
-  data.forEach(album => {
-    const albumDiv = document.createElement('div');
-    albumDiv.innerHTML = `<h3>${album.name} - ${album.artist}</h3>
-                          <a href="${album.url}"><img src="${album.picture_url}" alt="${album.name}"></a>
-                          <h4>${album.releaseDate}</h4>`;  
-    var deleteBtn = document.createElement('button');
-    deleteBtn.innerHTML = "Delete";
-    deleteBtn.classList.add("btn");
-    deleteBtn.classList.add("btn-danger");
-    deleteBtn.addEventListener("click", () => {
-      deleteAlbum(album.id);
+  //data.forEach(album => {
+    // const albumDiv = document.createElement('div');
+    // albumDiv.innerHTML = `<h3>${album.name} - ${album.artist}</h3>
+    //                       <a href="${album.url}"><img src="${album.picture_url}" alt="${album.name}"></a>
+    //                       <h4>${album.releaseDate}</h4>`;  
+    // var deleteBtn = document.createElement('button');
+    // deleteBtn.innerHTML = "Delete";
+    // deleteBtn.classList.add("btn");
+    // deleteBtn.classList.add("btn-danger");
+    // deleteBtn.addEventListener("click", () => {
+    //   deleteAlbum(album.id);
+    // });
+    // albumDiv.append(deleteBtn);
+    // albumList.appendChild(albumDiv);
+    data.forEach((album) => {
+      const listCard = document.createElement("div");
+      listCard.classList.add("card");
+      listCard.classList.add("mb-3");
+      listCard.classList.add("albumCard");
+      listCard.classList.add("text-center");
+  
+      const listCover = document.createElement("img");
+      listCover.classList.add("albumCover");
+      listCover.classList.add("card-img-top");
+      listCover.src = album.picture_url;
+  
+      const linkPage = document.createElement("a");
+      linkPage.href = "spotify.com";
+      linkPage.classList.add("albumCover");
+
+      //
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.classList.add("mb-3");
+      card.classList.add("albumCard");
+      const cardBody = document.createElement("div");
+      cardBody.classList.add("card-body");
+   
+      const listName = document.createElement("h5");
+      listName.classList.add("card-title");
+      listName.classList.add("display-1");
+      listName.textContent = album.name;
+
+      // var separator = document.createElement("div");
+      // separator.classList.add("container");
+      // separator.classList.add("py-1");
+      // separator.classList.add("mx-auto");
+      // separator.classList.add("separator");
+
+
+      var deleteBtn = document.createElement('button');
+      deleteBtn.innerHTML = "Delete";
+      deleteBtn.classList.add("btn");
+      deleteBtn.classList.add("btn-danger");
+      deleteBtn.classList.add("deleteBtn");
+      deleteBtn.addEventListener("click", () => {
+        deleteAlbum(album.id);
+      });
+
+      //separator.appendChild(deleteBtn);
+  
+      linkPage.innerHTML = listCover.outerHTML;
+
+      cardBody.appendChild(listName);
+      cardBody.appendChild(deleteBtn);
+      
+      card.appendChild(cardBody);
+  
+      listCard.appendChild(linkPage);
+      listCard.appendChild(card);
+  
+      albumList.append(listCard);
     });
-    albumDiv.append(deleteBtn);
-    albumList.appendChild(albumDiv);
   });
-})
-.catch(error => console.error(error));
 
 function deleteAlbum (albumID) {
   fetch("http://localhost:3000/albums/" + albumID, {

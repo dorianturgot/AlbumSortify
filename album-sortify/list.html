@@ -22,7 +22,7 @@
         <h2>Your lists</h2>
         <button id="newListBtn" class="btn btn-success my-2">Update the list</button>
         <div class="container py-4 px-3 mx-auto">
-          <div id="albumList"></div>
+          <div class="card-deck listContainer" id="albumList"></div>
         </div>
         <div id="newListModal" class="modal">
           <div class="modal-content">
@@ -35,6 +35,11 @@
           </div>
         </div>
       </div>
+      <footer>
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+          © 2023 Copyright: Dorian TURGOT
+        </div>
+      </footer>
       <script type="module" src="src/js/main.js"></script>
       <script src="src/js/list.js" type="module"></script>
     </body>

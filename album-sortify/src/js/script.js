@@ -136,6 +136,7 @@ export async function onSearch(search) {
     albumCard.classList.add("card");
     albumCard.classList.add("cardList");
     albumCard.classList.add("card-body");
+    albumCard.classList.add("cardBodyScroll");
 
     const albumImage = document.createElement("img");
     albumImage.src = alb.images[0].url;
@@ -196,6 +197,7 @@ export async function onSearchArtist(search) {
   albumCard.classList.add("card");
   albumCard.classList.add("cardList");
   albumCard.classList.add("card-body");
+  albumCard.classList.add("cardBodyScroll");
 
   const albumImage = document.createElement("img");
   albumImage.src = alb.images[0].url;
@@ -228,6 +230,7 @@ export function getAlbums(albums) {
     albumCard.classList.add("card");
     albumCard.classList.add("cardList");
     albumCard.classList.add("card-body");
+    albumCard.classList.add("cardBodyScroll");
 
     const albumImage = document.createElement("img");
     albumImage.src = alb.album.images[0].url;
@@ -276,7 +279,7 @@ export function getLastReleases(newAlbums) {
     albumCard.classList.add("cardList");
     albumCard.classList.add("card");
     albumCard.classList.add("card-body");
-
+    albumCard.classList.add("cardBodyScroll");
 
     const albumImage = document.createElement("img");
     albumImage.src = alb.images[0].url;
@@ -337,6 +340,7 @@ export function getTopArtists(topArtists) {
     albumCard.classList.add("card");
     albumCard.classList.add("cardList");
     albumCard.classList.add("card-body");
+    albumCard.classList.add("cardBodyScroll");
   
     const albumImage = document.createElement("img");
     albumImage.src = alb.images[0].url;

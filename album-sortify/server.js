@@ -24,8 +24,7 @@ connection.connect((err) => {
 // GET - get all albums from a list for a user
 app.get('/list/:listID', (req, res) => {
   const listID = req.params.listID;
-  const userID = req.query.userID;
-  const sql = `SELECT * FROM album WHERE listID = \'${listID}\' AND userID = \'${userID}\'`;
+  const sql = `SELECT * FROM album WHERE listID = \'${listID}\'`;
 
   connection.query(sql, (err, result) => {
     if (err) throw err;
