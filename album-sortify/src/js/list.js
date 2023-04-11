@@ -69,10 +69,15 @@ fetch("http://localhost:3000/list/" + listID, {
 
 
       var deleteBtn = document.createElement('button');
-      deleteBtn.innerHTML = "Delete";
       deleteBtn.classList.add("btn");
       deleteBtn.classList.add("btn-danger");
       deleteBtn.classList.add("deleteBtn");
+      const plus = document.createElement("i");
+      plus.classList.add("fa");
+      plus.classList.add("fa-minus");
+      plus.style.color = "white";
+      deleteBtn.appendChild(plus);
+
       deleteBtn.addEventListener("click", () => {
         deleteAlbum(album.id);
       });
@@ -82,10 +87,11 @@ fetch("http://localhost:3000/list/" + listID, {
       linkPage.innerHTML = listCover.outerHTML;
 
       cardBody.appendChild(listName);
-      cardBody.appendChild(deleteBtn);
+      
       
       card.appendChild(cardBody);
   
+      listCard.appendChild(deleteBtn);
       listCard.appendChild(linkPage);
       listCard.appendChild(card);
   
@@ -109,7 +115,7 @@ function deleteAlbum (albumID) {
   })
   .then(data => {
     console.log("Album deleted:", data);
-    alert("Album deleted!");
+    document.getElementById("deletedAlert").classList.remove("d-none");
     window.location.href = "list.html?listID=" + listID;
   })
   .catch(error => {

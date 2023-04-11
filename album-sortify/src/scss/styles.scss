@@ -208,8 +208,13 @@ body {
 }
 
 .deleteBtn {
-  padding: 0;
-  width: 60px;
-  height: 25px;
+  padding: auto;
+  // width: 60px;
+  // height: 25px;
   font-size: 15px;
+  position: absolute;
+  float: right;
+  margin: 5px;
+  border-radius: 100%;
+  box-shadow: 0 3px 5px  rgba(0, 0, 0, 0.2);
 }
