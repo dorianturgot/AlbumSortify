@@ -42,6 +42,14 @@ export async function fetchTopArtists(token) {
     return await result.json();
 }
 
+export async function fetchTopArtistsAlbums(token, artistID) {
+    const result = await fetch("https://api.spotify.com/v1/artists/" + artistID + "/albums", {
+        method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return await result.json();
+}
+
 export function populateUI(profile) {
     if (!profile.display_name)
     {

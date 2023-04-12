@@ -57,6 +57,7 @@
         <div class="d-flex flex-row flex-nowrap results" id="resultsArtists"></div>
       </div>
     </div>
+    <i class="fas fa-list-music"></i>
     <div class="container py-4 px-3 mx-auto">
       <h2>Your top artists</h2>  
       <div class="container-fluid py-2 overflowContainer">
@@ -73,6 +74,36 @@
           <div class="modal-body modalBackground">
             <div class="container py-4 px-3 mx-auto">
               <div class="card-deck listContainer moreAlbumContainer" id="moreSavedAlbumsList"></div>
+            </div>
+          </div> 
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="moreSavedAlbumsModal" tabindex="-1" role="dialog" aria-labelledby="moreSavedAlbumsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg"  role="document">
+        <div class="modal-content" >
+          <div class="modal-header">
+            <h5 class="modal-title" id="moreSavedAlbumsModalLabel">Your saved albums</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body modalBackground">
+            <div class="container py-4 px-3 mx-auto">
+              <div class="card-deck listContainer moreAlbumContainer" id="moreSavedAlbumsList"></div>
+            </div>
+          </div> 
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="topArtistsModal" tabindex="-1" role="dialog" aria-labelledby="topArtistsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg"  role="document">
+        <div class="modal-content" >
+          <div class="modal-header">
+            <h5 class="modal-title" id="topArtistsModalLabel">Artist's albums</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body modalBackground">
+            <div class="container py-4 px-3 mx-auto">
+              <div class="card-deck listContainer moreAlbumContainer" id="topArtistsModalList"></div>
             </div>
           </div> 
         </div>
