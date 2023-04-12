@@ -110,7 +110,11 @@ fetch("http://localhost:3000/list/" + listID, {
       spotify.classList.add("fa-spotify");
       listenInSpotify.appendChild(spotify);
 
-  
+      listenInSpotify.addEventListener("click", () => {
+        console.log(album.spotifyID);
+        window.open("spotify:album:" + album.spotifyID, '_blank');
+      });
+
       linkPage.innerHTML = listCover.outerHTML;
 
       cardBody.appendChild(listName);
