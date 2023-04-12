@@ -35,8 +35,7 @@ body {
   }
   
   footer {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
+    background: #212529;
   }
   
   footer p {
@@ -190,13 +189,18 @@ body {
 }
 
 .albumCard {
-  background-color: #181717;
+  //background-color: #181717;
+  background-color: #1f1f1f;
   width: 10px;
+  border: none;
+  width: 150px;
+  margin-right:30px;
 }
 
 .albumCover {
   text-align: center; 
   padding-top: 5px;
+  cursor: none;
 }
 
 .albumCard h5 {
@@ -218,3 +222,41 @@ body {
   border-radius: 100%;
   box-shadow: 0 3px 5px  rgba(0, 0, 0, 0.2);
 }
+
+#test {
+  //background-color: #e0e0e0;
+  background-image: linear-gradient(#eeeded, #cacaca);
+}
+
+.albumCoverList {
+  width: 130px;
+  height: 130px;
+  border-radius: 4px;
+}
+
+.artistName {
+  font-size: 15px;
+  font-weight: 300;
+  color: #a0a0a0;
+}
+
+.artistYear {
+  font-size: 13px;
+  font-weight: 300;
+  color: #a0a0a0;
+  font-style: italic;
+}
+
+.listenInSpotify {
+  width: auto;
+  height: auto;
+  margin: 6%;
+  margin-top: 4%;
+  margin-bottom: 0;
+  padding: 2%;
+  }
+
+  .albumCardBody {
+    margin: 3%;
+    padding: 3%;
+  }

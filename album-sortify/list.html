@@ -19,20 +19,35 @@
           </div>
       </header>
       <div class="container py-4 px-3 mx-auto">
-        <h2>Your lists</h2>
-        <button id="newListBtn" class="btn btn-success my-2">Update the list</button>
+        <h2 id="YourLists"></h2>
+        <button class="btn btn-success my-2" id="newListBtn" data-bs-toggle="modal" data-bs-target="#newListModal">Update the list</button>
         <div class="container py-4 px-3 mx-auto">
           <div class="alert alert-success d-none" role="alert" id="deletedAlert">Album successfully deleted from list!</div>
           <div class="card-deck listContainer" id="albumList"></div>
         </div>
-        <div id="newListModal" class="modal">
-          <div class="modal-content">
-            <span class="close">&times;</span>
-            <h1 class="modalText">Update the list</h1>
-            <hr>
-            <input id="newListName" type="text" placeholder="Enter the name of your list" required>
-            <h5 class="modalText">Choose a color<input type="color" id="colorPicker"></h5>
-            <button id="confirmBtnUpdateList">Confirm</button>
+        <div class="modal fade" id="newListModal" tabindex="-1" role="dialog" aria-labelledby="newListModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="newListModalLabel">Update the list</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>Enter the new name of your list and choose a color.</p>
+                <div class="form-group">
+                  <label for="newListName">List name</label>
+                  <input id="newListName" type="text" class="form-control" placeholder="Enter the name of your list">
+                </div>
+                <div class="form-group">
+                  <label for="colorPicker">Color</label>
+                  <input type="color" class="form-control form-control-color" id="colorPicker">
+                </div>
+              </div> 
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="confirmBtnNewList">Confirm</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -45,7 +60,3 @@
       <script src="src/js/list.js" type="module"></script>
     </body>
 </html>
-<style>
-@import 'src/list.css';
-@import 'src/modal.css';
-</style>

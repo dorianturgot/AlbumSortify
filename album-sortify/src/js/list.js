@@ -4,7 +4,13 @@ const albumListDiv = document.querySelector("#album-list");
 const queryParams = new URLSearchParams(window.location.search);
 const listID = queryParams.get('listID');
 
+const urlParams = new URLSearchParams(window.location.search);
+const MyListName = urlParams.get('listName');
+
 console.log('userIDSpotify = ' + userIDSpotify);
+
+var yourLists = document.getElementById('YourLists');
+yourLists.innerHTML += MyListName;
 
 
 fetch("http://localhost:3000/list/" + listID, {
@@ -37,35 +43,48 @@ fetch("http://localhost:3000/list/" + listID, {
       listCard.classList.add("card");
       listCard.classList.add("mb-3");
       listCard.classList.add("albumCard");
+      listCard.classList.add("cardList");
       listCard.classList.add("text-center");
   
       const listCover = document.createElement("img");
       listCover.classList.add("albumCover");
+      listCover.classList.add("albumCoverList");
       listCover.classList.add("card-img-top");
       listCover.src = album.picture_url;
   
       const linkPage = document.createElement("a");
-      linkPage.href = "spotify.com";
+      linkPage.href = album.url;
       linkPage.classList.add("albumCover");
 
       //
       const card = document.createElement("div");
       card.classList.add("card");
-      card.classList.add("mb-3");
       card.classList.add("albumCard");
       const cardBody = document.createElement("div");
       cardBody.classList.add("card-body");
+      cardBody.classList.add("albumCardBody");
    
       const listName = document.createElement("h5");
       listName.classList.add("card-title");
-      listName.classList.add("display-1");
+      listName.classList.add("albumName");
       listName.textContent = album.name;
 
-      // var separator = document.createElement("div");
-      // separator.classList.add("container");
-      // separator.classList.add("py-1");
-      // separator.classList.add("mx-auto");
-      // separator.classList.add("separator");
+      const listArtist = document.createElement("p");
+      listArtist.classList.add("card-text");
+      listArtist.classList.add("display-1");
+      listArtist.classList.add("artistName");
+      listArtist.textContent = album.artist;
+
+
+      const listYear = document.createElement("p");
+      listYear.classList.add("card-text");
+      listYear.classList.add("artistYear");
+
+      const smallYear = document.createElement("small");
+      smallYear.classList.add("text-muted");
+      smallYear.textContent = album.releaseDate;
+
+      listYear.appendChild(smallYear);
 
 
       var deleteBtn = document.createElement('button');
@@ -82,17 +101,30 @@ fetch("http://localhost:3000/list/" + listID, {
         deleteAlbum(album.id);
       });
 
-      //separator.appendChild(deleteBtn);
+      var listenInSpotify = document.createElement('button');
+      listenInSpotify.classList.add("btn");
+      listenInSpotify.classList.add("btn-success");
+      listenInSpotify.classList.add("listenInSpotify");
+      const spotify = document.createElement("i");
+      spotify.classList.add("fab");
+      spotify.classList.add("fa-spotify");
+      listenInSpotify.appendChild(spotify);
+
   
       linkPage.innerHTML = listCover.outerHTML;
 
       cardBody.appendChild(listName);
+      cardBody.appendChild(listArtist);
+      cardBody.appendChild(listYear);
       
       
+      card.appendChild(listenInSpotify);
       card.appendChild(cardBody);
+      
   
       listCard.appendChild(deleteBtn);
       listCard.appendChild(linkPage);
+      
       listCard.appendChild(card);
   
       albumList.append(listCard);
@@ -116,7 +148,7 @@ function deleteAlbum (albumID) {
   .then(data => {
     console.log("Album deleted:", data);
     document.getElementById("deletedAlert").classList.remove("d-none");
-    window.location.href = "list.html?listID=" + listID;
+    window.location.href = "list.html?listID=" + listID + "&listName=" + MyListName;
   })
   .catch(error => {
     console.error("Error deleting album:", error);
@@ -128,18 +160,9 @@ function deleteAlbum (albumID) {
 
 var modal = document.getElementById("newListModal");
 
-// Get the button that opens the modal
-var btn = document.getElementById("newListBtn");
+document.getElementById("newListName").value = MyListName;
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks on the button, open the modal
-btn.onclick = function() {
-  modal.style.display = "block";
-  document.getElementById("newListName").value = ""
-  document.getElementById("colorPicker").value = "";
-}
+var confirmBtnUpdateList = document.getElementById("confirmBtnNewList");
 
 confirmBtnUpdateList.onclick = function() {
   const newListName = document.getElementById("newListName").value;
@@ -170,24 +193,9 @@ confirmBtnUpdateList.onclick = function() {
       .then((data) => {
         console.log("List updated:", data);
         alert("List updated successfully!");
-        modal.style.display = "none";
       })
       .catch((error) => {
         console.error("Error updating list:", error);
         alert("Error updating list.");
       });
 }
-
-
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-} 

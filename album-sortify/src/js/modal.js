@@ -1,4 +1,4 @@
-    import { fetchLists } from "./script.js";
+import { fetchLists } from "./script.js";
 
 // Get the button that opens the modal
 var confirmBtnNewList = document.getElementById("confirmBtnNewList");

@@ -389,7 +389,7 @@ export function getLists(lists) {
     listCover.style.backgroundColor = albumlist.color;
 
     const linkPage = document.createElement("a");
-    linkPage.href = "list.html?listID=" + albumlist.id;
+    linkPage.href = "list.html?listID=" + albumlist.id + "&listName=" + albumlist.name;
 
     const listName = document.createElement("h5");
     listName.classList.add("card-title");
