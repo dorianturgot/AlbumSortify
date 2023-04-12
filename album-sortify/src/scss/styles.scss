@@ -63,6 +63,10 @@ body {
     max-width: 80%;
     margin: 0 auto;
   }
+
+  .moreAlbumContainer {
+    max-width: 100%;
+  }
   
   .listCover {
     background-image: var(--bs-gradient);
@@ -124,6 +128,19 @@ body {
     padding-bottom: 10px;
 }
 
+.savedAlbumsCard img {
+  width: auto;
+  height: auto;
+  padding: 1%;
+}
+
+.savedAlbumsCard h3 {
+  color: white;
+}
+
+.savedAlbumsCard {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
 
 .albums {
     overflow-x: scroll;
@@ -223,7 +240,7 @@ body {
   box-shadow: 0 3px 5px  rgba(0, 0, 0, 0.2);
 }
 
-#test {
+.modalBackground {
   //background-color: #e0e0e0;
   background-image: linear-gradient(#eeeded, #cacaca);
 }
@@ -259,4 +276,9 @@ body {
   .albumCardBody {
     margin: 3%;
     padding: 3%;
+  }
+
+  #moreSavedAlbumsBtn {
+    color:white;
+    margin-left: 1%;
   }

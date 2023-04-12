@@ -9,12 +9,22 @@ export async function fetchProfile(token) {
 }
 
 export async function fetchAlbums(token) {
+    const result = await fetch("https://api.spotify.com/v1/me/albums?offset=0&limit=20", {
+        method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return await result.json();
+}
+
+
+export async function fetchMoreAlbums(token) {
     const result = await fetch("https://api.spotify.com/v1/me/albums?offset=0&limit=50", {
         method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
 
     return await result.json();
 }
+
 
 export async function fetchNewReleases(token) {
     const result = await fetch("https://api.spotify.com/v1/browse/new-releases?offset=0&limit=20", {

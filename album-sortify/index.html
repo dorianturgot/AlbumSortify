@@ -38,7 +38,7 @@
       </div>
     </div>
     <div class="container py-4 px-3 mx-auto">
-      <h2>Your saved albums</h2>
+      <h2>Your last 20 saved albums<button class="btn btn-outline-secondary" id="moreSavedAlbumsBtn" data-bs-toggle="modal" data-bs-target="#moreSavedAlbumsModal">More</button></h2>
       <div class="container-fluid py-2 overflowContainer">
         <div class="d-flex flex-row flex-nowrap albums" id="albums"></div>
       </div>
@@ -61,6 +61,21 @@
       <h2>Your top artists</h2>  
       <div class="container-fluid py-2 overflowContainer">
         <div class="d-flex flex-row flex-nowrap results" id="topArtists"></div>
+      </div>
+    </div>
+    <div class="modal fade" id="moreSavedAlbumsModal" tabindex="-1" role="dialog" aria-labelledby="moreSavedAlbumsModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg"  role="document">
+        <div class="modal-content" >
+          <div class="modal-header">
+            <h5 class="modal-title" id="moreSavedAlbumsModalLabel">Your saved albums</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body modalBackground">
+            <div class="container py-4 px-3 mx-auto">
+              <div class="card-deck listContainer moreAlbumContainer" id="moreSavedAlbumsList"></div>
+            </div>
+          </div> 
+        </div>
       </div>
     </div>
     <div class="modal fade" id="newListModal" tabindex="-1" role="dialog" aria-labelledby="newListModalLabel" aria-hidden="true">
@@ -95,7 +110,7 @@
             <h5 class="modal-title" id="addToListModalLabel">Add to a list</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body .bg-light.bg-gradient" id="test">
+          <div class="modal-body .bg-light.bg-gradient modalBackground" id="test">
           <div class="alert alert-success d-none" role="alert" id="successAlert">Album added successfully to list!</div>
           <div class="alert alert-danger d-none" role="alert" id="failedAlert">Album already in list.</div>
             <p>Select the list you want your album into.</p>

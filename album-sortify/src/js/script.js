@@ -1,4 +1,4 @@
-import { populateUI, fetchAlbums, fetchProfile, fetchNewReleases, fetchTopArtists } from "./spotify.js";
+import { populateUI, fetchAlbums, fetchMoreAlbums, fetchProfile, fetchNewReleases, fetchTopArtists } from "./spotify.js";
 import { openAddToListModal } from "./addtolist.js";
 
 // --------------------- Start of Spotify API requirements --------------------- //
@@ -46,6 +46,9 @@ if (!code && !accessToken) {
     await fetchLists(userIDSpotify);
     const albums = await fetchAlbums(accessToken);
     getAlbums(albums);
+    const moreAlbums = await fetchMoreAlbums(accessToken);
+    
+    moreAlbumsSaved(moreAlbums);
     const newReleases = await fetchNewReleases(accessToken);
     getLastReleases(newReleases);
     const topArtists = await fetchTopArtists(accessToken);
@@ -225,55 +228,57 @@ searchbarArtists.addEventListener("input", onSearchArtist);
 
 // Gets users's liked albums, displays them and adds them to the database if wanted
 export function getAlbums(albums) {
+  document.getElementById("albums").innerHTML = "";
   albums.items.forEach((alb) => {
-    const albumCard = document.createElement("div");
-    albumCard.classList.add("card");
-    albumCard.classList.add("cardList");
-    albumCard.classList.add("card-body");
-    albumCard.classList.add("cardBodyScroll");
+      const albumCard = document.createElement("div");
+      albumCard.classList.add("card");
+      albumCard.classList.add("cardList");
+      albumCard.classList.add("card-body");
+      albumCard.classList.add("cardBodyScroll");
 
-    const albumImage = document.createElement("img");
-    albumImage.src = alb.album.images[0].url;
-    albumImage.alt = alb.album.id;
-    albumImage.addEventListener("click", () => {
-      window.open(alb.album.external_urls.spotify, "_blank");
-    });
+      const albumImage = document.createElement("img");
+      albumImage.src = alb.album.images[0].url;
+      albumImage.alt = alb.album.id;
+      albumImage.addEventListener("click", () => {
+        window.open(alb.album.external_urls.spotify, "_blank");
+      });
 
-    const albumTitle = document.createElement("h3");
-    albumTitle.classList.add("card-title");
-    albumTitle.textContent = alb.album.name;
+      const albumTitle = document.createElement("h3");
+      albumTitle.classList.add("card-title");
+      albumTitle.textContent = alb.album.name;
 
-    const albumArtist = document.createElement("h4");
-    albumArtist.textContent = alb.album.artists[0].name;
+      const albumArtist = document.createElement("h4");
+      albumArtist.textContent = alb.album.artists[0].name;
 
-    const addAlbumBtn = document.createElement("button");
-    const plus = document.createElement("i");
-    plus.classList.add("fa");
-    plus.classList.add("fa-plus");
-    plus.style.color = "white";
-    addAlbumBtn.appendChild(plus);
+      const addAlbumBtn = document.createElement("button");
+      const plus = document.createElement("i");
+      plus.classList.add("fa");
+      plus.classList.add("fa-plus");
+      plus.style.color = "white";
+      addAlbumBtn.appendChild(plus);
 
-    addAlbumBtn.classList.add("btn");
-    addAlbumBtn.classList.add("btn-success");
-    addAlbumBtn.classList.add("addBtn");
+      addAlbumBtn.classList.add("btn");
+      addAlbumBtn.classList.add("btn-success");
+      addAlbumBtn.classList.add("addBtn");
 
-    addAlbumBtn.addEventListener("click", (event) => {
-      $("#addToListModal").modal('toggle');
-      openAddToListModal(alb.album);
-    });
+      addAlbumBtn.addEventListener("click", (event) => {
+        $("#addToListModal").modal('toggle');
+        openAddToListModal(alb.album);
+      });
 
-    albumCard.appendChild(addAlbumBtn);
-    albumCard.appendChild(albumImage);
-    albumCard.appendChild(albumTitle);
-    albumCard.appendChild(albumArtist);
-    
+      albumCard.appendChild(addAlbumBtn);
+      albumCard.appendChild(albumImage);
+      albumCard.appendChild(albumTitle);
+      albumCard.appendChild(albumArtist);
+      
 
-    document.getElementById("albums").appendChild(albumCard);
-  });
+      document.getElementById("albums").appendChild(albumCard);
+  });  
 }
 
 // Gets lasts releases from Spotify and displays them
 export function getLastReleases(newAlbums) {
+  document.getElementById("newReleases").innerHTML = "";
   newAlbums.albums.items.forEach((alb) => {
     const albumCard = document.createElement("div");
     albumCard.classList.add("cardList");
@@ -335,6 +340,7 @@ function capitalizeFirstLetter(string) {
 
 // Gets top artists from user profile and displays them
 export function getTopArtists(topArtists) {
+  document.getElementById("topArtists").innerHTML = "";
   topArtists.items.forEach((alb) => {
     const albumCard = document.createElement("div");
     albumCard.classList.add("card");
@@ -402,6 +408,59 @@ export function getLists(lists) {
     listCard.appendChild(listName);
 
     document.getElementById("lists").innerHTML += listCard.outerHTML;
+  });
+}
+
+
+// Displays every lists from the user
+export function moreAlbumsSaved(lists) {
+  document.getElementById("moreSavedAlbumsList").innerHTML = "";
+  lists.items.forEach((alb) => {
+    const albumCard = document.createElement("div");
+    albumCard.classList.add("card");
+    albumCard.classList.add("cardList");
+    albumCard.classList.add("card-body");
+    albumCard.classList.add("savedAlbumsCard");
+    albumCard.classList.add("cardBodyScroll");
+
+    const albumImage = document.createElement("img");
+    albumImage.src = alb.album.images[0].url;
+    albumImage.alt = alb.album.id;
+    albumImage.addEventListener("click", () => {
+      window.open(alb.album.external_urls.spotify, "_blank");
+    });
+
+    const albumTitle = document.createElement("h3");
+    albumTitle.classList.add("card-title");
+    albumTitle.textContent = alb.album.name;
+
+    const albumArtist = document.createElement("h4");
+    albumArtist.textContent = alb.album.artists[0].name;
+
+    const addAlbumBtn = document.createElement("button");
+    const plus = document.createElement("i");
+    plus.classList.add("fa");
+    plus.classList.add("fa-plus");
+    plus.style.color = "white";
+    addAlbumBtn.appendChild(plus);
+
+    addAlbumBtn.classList.add("btn");
+    addAlbumBtn.classList.add("btn-success");
+    addAlbumBtn.classList.add("addBtn");
+
+    addAlbumBtn.addEventListener("click", (event) => {
+      $("#addToListModal").modal('toggle');
+      openAddToListModal(alb.album);
+    });
+
+    albumCard.appendChild(addAlbumBtn);
+    albumCard.appendChild(albumImage);
+    albumCard.appendChild(albumTitle);
+    albumCard.appendChild(albumArtist);
+    
+
+    document.getElementById("moreSavedAlbumsList").appendChild(albumCard);
+
   });
 }
 
