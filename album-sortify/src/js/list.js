@@ -81,7 +81,7 @@ fetch("http://localhost:3000/list/" + listID, {
 
       const smallYear = document.createElement("small");
       smallYear.classList.add("text-muted");
-      smallYear.textContent = album.releaseDate;
+      smallYear.textContent = convertReleaseDate(album.releaseDate);
 
       listYear.appendChild(smallYear);
 
@@ -211,4 +211,15 @@ confirmBtnUpdateList.onclick = function() {
         console.error("Error updating list:", error);
         alert("Error updating list.");
       });
+}
+
+// ----------------------------------- //
+function convertReleaseDate(releaseDate)
+{
+  // convert string YYYY-MM-DD to Month Day, Year
+  var date = new Date(releaseDate);
+  var month = date.toLocaleString('default', { month: 'long' });
+  var day = date.getDate();
+  var year = date.getFullYear();
+  return month + " " + day + ", " + year;
 }
