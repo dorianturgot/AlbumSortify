@@ -250,6 +250,16 @@ export function getAlbums(albums) {
       const albumArtist = document.createElement("h4");
       albumArtist.textContent = alb.album.artists[0].name;
 
+      const albumNbTracks = document.createElement("p");
+      albumNbTracks.classList.add("card-text");
+      albumNbTracks.classList.add("artistYear");
+      albumNbTracks.classList.add("text-center");
+
+      const smallNbTracks = document.createElement("small");
+      smallNbTracks.classList.add("text-muted");
+      smallNbTracks.textContent = alb.album.total_tracks + " tracks - " + giveAlbumDuration(alb);
+      albumNbTracks.appendChild(smallNbTracks);
+
       const addAlbumBtn = document.createElement("button");
       const plus = document.createElement("i");
       plus.classList.add("fa");
@@ -270,6 +280,7 @@ export function getAlbums(albums) {
       albumCard.appendChild(albumImage);
       albumCard.appendChild(albumTitle);
       albumCard.appendChild(albumArtist);
+      albumCard.appendChild(albumNbTracks);
       
 
       document.getElementById("albums").appendChild(albumCard);
@@ -389,6 +400,7 @@ export function getTopArtists(topArtists) {
 
 // Gets top artists from user profile and displays them
 export function getArtistAlbums(artistAlbums) {
+  document.getElementById("topArtistsModalLabel").innerHTML = artistAlbums.items[0].artists[0].name + "'s albums";
   document.getElementById("topArtistsModalList").innerHTML = "";
   //console.log(artistAlbums);
   artistAlbums.items.forEach((alb) => {
@@ -545,3 +557,22 @@ export function moreAlbumsSaved(lists) {
   });
 }
 
+function giveAlbumDuration(alb) {
+  //console.log(alb);
+  let duration = 0;
+  alb.album.tracks.items.forEach((track) => {
+    duration += track.duration_ms;
+  });
+  // convert duration to H h M m S s
+  let hours = Math.floor(duration / 3600000);
+  let minutes = Math.floor((duration % 3600000) / 60000);
+  let seconds = Math.floor(((duration % 360000) % 60000) / 1000);
+  // only display hours if there are any
+  if (hours > 0) {
+    hours = hours + "h ";
+  } else {
+    hours = "";
+  }
+  duration = hours + minutes + "m " + seconds + "s";
+  return duration;
+}

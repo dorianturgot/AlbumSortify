@@ -35,6 +35,7 @@ export function getListsForAlb(lists, userIDSpotify, alb) {
     const linkPage = document.createElement("a");
     linkPage.style.cursor = "pointer";
     linkPage.addEventListener("click", () => {
+      console.log("there is " + alb.total_tracks);
       addAlbumToThisList(albumlist.id, userIDSpotify, alb);
     });
 
@@ -75,6 +76,7 @@ export function addAlbumToThisList(ListID, userIDSpotify, alb)
           releaseDate: alb.release_date,
           spotifyID: alb.id,
           listID: ListID,
+          total_tracks: alb.total_tracks,
         }),
       })
         .then((response) => {

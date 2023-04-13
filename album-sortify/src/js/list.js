@@ -75,7 +75,6 @@ fetch("http://localhost:3000/list/" + listID, {
       listArtist.classList.add("artistName");
       listArtist.textContent = album.artist;
 
-
       const listYear = document.createElement("p");
       listYear.classList.add("card-text");
       listYear.classList.add("artistYear");
@@ -86,6 +85,15 @@ fetch("http://localhost:3000/list/" + listID, {
 
       listYear.appendChild(smallYear);
 
+      const albumNbTracks = document.createElement("p");
+      albumNbTracks.classList.add("card-text");
+      albumNbTracks.classList.add("artistYear");
+
+      const smallAlbumNbTracks = document.createElement("small");
+      smallAlbumNbTracks.classList.add("text-muted");
+      smallAlbumNbTracks.textContent = album.total_tracks + " Tracks";
+
+      albumNbTracks.appendChild(smallAlbumNbTracks);
 
       var deleteBtn = document.createElement('button');
       deleteBtn.classList.add("btn");
@@ -120,6 +128,7 @@ fetch("http://localhost:3000/list/" + listID, {
       cardBody.appendChild(listName);
       cardBody.appendChild(listArtist);
       cardBody.appendChild(listYear);
+      cardBody.appendChild(albumNbTracks);
       
       
       card.appendChild(listenInSpotify);
