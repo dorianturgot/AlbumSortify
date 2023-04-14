@@ -96,13 +96,45 @@ app.delete('/albums/:albumID', (req, res) => {
 
   connection.query(sql, albumID, (err, result) => {
     if (err) {
-      console.error('Error updating albumlist:', err);
+      console.error('Error deleting album from list:', err);
       res.status(500).json({ error: 'Error deleting album from list.' });
     } else {
       res.status(200).json({ albumID });
     }
   });
 });
+
+
+// DELETE - delete a list
+app.delete('/albumlist/:listID', (req, res) => {
+  const listID = req.params.listID;
+  const sql = `DELETE FROM albumlist WHERE id = \'${listID}\';`;
+
+  connection.query(sql, listID, (err, result) => {
+    if (err) {
+      console.error('Error deleting list:', err);
+      res.status(500).json({ error: 'Error deleting list.' });
+    } else {
+      res.status(200).json({ listID });
+    }
+  });
+});
+
+// DELETE - delete all albums from a list
+app.delete('/album/:listID', (req, res) => {
+  const listID = req.params.listID;
+  const sql = `DELETE FROM album WHERE listID = \'${listID}\';`;
+
+  connection.query(sql, listID, (err, result) => {
+    if (err) {
+      console.error('Error deleting all album from list:', err);
+      res.status(500).json({ error: 'Error deleting all albums from list.' });
+    } else {
+      res.status(200).json({ listID });
+    }
+  });
+});
+
 
 
 

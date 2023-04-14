@@ -155,6 +155,18 @@ export async function onSearch(search) {
     const albumArtist = document.createElement("h4");
     albumArtist.textContent = alb.artists[0].name;
 
+    const albumNbTracks = document.createElement("p");
+    albumNbTracks.classList.add("card-text");
+    albumNbTracks.classList.add("artistYear");
+    albumNbTracks.classList.add("text-center");
+    albumNbTracks.classList.add("smallNbTracks");
+
+    const smallNbTracks = document.createElement("small");
+    smallNbTracks.classList.add("text-muted");
+    var trackStr = alb.total_tracks > 1 ? " tracks" : " track";
+    smallNbTracks.textContent = alb.total_tracks + trackStr;
+    albumNbTracks.appendChild(smallNbTracks);
+
     const addAlbumBtn = document.createElement("button");
     const plus = document.createElement("i");
     plus.classList.add("fa");
@@ -174,6 +186,7 @@ export async function onSearch(search) {
     albumCard.appendChild(albumImage);
     albumCard.appendChild(albumTitle);
     albumCard.appendChild(albumArtist);
+    albumCard.appendChild(albumNbTracks);
     resultsContainer.appendChild(albumCard);
   });
 }
@@ -333,11 +346,8 @@ export function getLastReleases(newAlbums) {
     albumArtist.textContent = alb.artists[0].name;
 
     const typeAlbum = document.createElement("h4");
-    var tracksStr = " tracks";
-    if (alb.total_tracks == 1) {
-      tracksStr = " track";
-    }
-    typeAlbum.textContent = capitalizeFirstLetter(alb.album_type) + " - " + alb.total_tracks + tracksStr;
+    var trackStr = alb.total_tracks > 1 ? " tracks" : " track";
+    typeAlbum.textContent = capitalizeFirstLetter(alb.album_type) + " - " + alb.total_tracks + trackStr;
     typeAlbum.classList.add("typeAlbum");
 
     // const hr = document.createElement("hr");

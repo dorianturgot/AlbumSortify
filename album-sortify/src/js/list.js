@@ -12,6 +12,11 @@ console.log('userIDSpotify = ' + userIDSpotify);
 var yourLists = document.getElementById('YourLists');
 yourLists.innerHTML += MyListName;
 
+document.getElementById('confirmDeleteListBtn').addEventListener('click', () => {
+  deleteAllAlbumFromList(listID);
+  deleteList(listID);
+});
+
 
 fetch("http://localhost:3000/list/" + listID, {
   method: "GET",
@@ -205,12 +210,64 @@ confirmBtnUpdateList.onclick = function() {
       })
       .then((data) => {
         console.log("List updated:", data);
-        alert("List updated successfully!");
+        document.getElementById("updatedAlert").classList.remove("d-none");
       })
       .catch((error) => {
         console.error("Error updating list:", error);
         alert("Error updating list.");
       });
+}
+
+// ---------- DELETING LIST -------------
+
+function deleteList() {
+  fetch("http://localhost:3000/albumlist/" + listID, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+  .then(response => {
+    if (response.status === 500) {
+      throw new Error("Server Error: " + response.statusText);
+    } else {
+      return response.json();
+    }
+  })
+  .then(data => {
+    console.log("List deleted:", data);
+    //alert("List deleted successfully!");
+    window.location.href = "index.html";
+  })
+  .catch(error => {
+    console.error("Error deleting list:", error);
+    alert("Error deleting list.");
+  });
+}
+
+function deleteAllAlbumFromList() {
+  fetch("http://localhost:3000/album/" + listID, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+  .then(response => {
+    if (response.status === 500) {
+      throw new Error("Server Error: " + response.statusText);
+    } else {
+      return response.json();
+    }
+  })
+  .then(data => {
+    console.log("All album from list deleted:", data);
+    //alert("All album from list deleted successfully!");
+    window.location.href = "index.html";
+  })
+  .catch(error => {
+    console.error("Error deleting all albums from list:", error);
+    //alert("Error deleting all albums from list.");
+  });
 }
 
 // ----------------------------------- //
@@ -223,3 +280,4 @@ function convertReleaseDate(releaseDate)
   var year = date.getFullYear();
   return month + " " + day + ", " + year;
 }
+
