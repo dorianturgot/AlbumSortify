@@ -212,6 +212,27 @@ export async function onSearchArtist(search) {
   const albumTitle = document.createElement("h3");
   albumTitle.textContent = alb.name;
 
+  const artistBtn = document.createElement("button");
+  const artistBtnLogo = document.createElement("i");
+  artistBtn.innerText = "Albums ";
+  artistBtnLogo.classList.add("fas");
+  artistBtnLogo.classList.add("fa-chevron-circle-down");
+  artistBtnLogo.style.color = "white";
+  artistBtn.appendChild(artistBtnLogo);
+
+  artistBtn.classList.add("btn");
+  artistBtn.classList.add("btn-secondary");
+  artistBtn.classList.add("artistBtn");
+
+      
+  artistBtn.addEventListener("click", async (event) => {
+    $("#topArtistsModal").modal('toggle');
+    var topArtistsAlbums = await fetchTopArtistsAlbums(accessToken, alb.id);
+    getArtistAlbums(topArtistsAlbums);
+    //openAddToListModal(topArtistsAlbums);
+  });
+
+  albumCard.appendChild(artistBtn);
   albumCard.appendChild(albumImage);
   albumCard.appendChild(albumTitle);
   resultsContainer.appendChild(albumCard);
@@ -254,6 +275,7 @@ export function getAlbums(albums) {
       albumNbTracks.classList.add("card-text");
       albumNbTracks.classList.add("artistYear");
       albumNbTracks.classList.add("text-center");
+      albumNbTracks.classList.add("smallNbTracks");
 
       const smallNbTracks = document.createElement("small");
       smallNbTracks.classList.add("text-muted");
@@ -311,11 +333,15 @@ export function getLastReleases(newAlbums) {
     albumArtist.textContent = alb.artists[0].name;
 
     const typeAlbum = document.createElement("h4");
-    typeAlbum.textContent = capitalizeFirstLetter(alb.album_type);
+    var tracksStr = " tracks";
+    if (alb.total_tracks == 1) {
+      tracksStr = " track";
+    }
+    typeAlbum.textContent = capitalizeFirstLetter(alb.album_type) + " - " + alb.total_tracks + tracksStr;
     typeAlbum.classList.add("typeAlbum");
 
-    const hr = document.createElement("hr");
-    hr.classList.add("hr");
+    // const hr = document.createElement("hr");
+    // hr.classList.add("hr");
 
     const addAlbumBtn = document.createElement("button");
     const plus = document.createElement("i");
@@ -337,7 +363,7 @@ export function getLastReleases(newAlbums) {
     albumCard.appendChild(albumImage);
     albumCard.appendChild(albumTitle);
     albumCard.appendChild(albumArtist);
-    albumCard.appendChild(hr);
+    //albumCard.appendChild(hr);
     albumCard.appendChild(typeAlbum);
 
     document.getElementById("newReleases").appendChild(albumCard);
@@ -530,6 +556,17 @@ export function moreAlbumsSaved(lists) {
     const albumArtist = document.createElement("h4");
     albumArtist.textContent = alb.album.artists[0].name;
 
+    const albumNbTracks = document.createElement("p");
+    albumNbTracks.classList.add("card-text");
+    albumNbTracks.classList.add("artistYear");
+    albumNbTracks.classList.add("text-center");
+    albumNbTracks.classList.add("smallNbTracks");
+
+    const smallNbTracks = document.createElement("small");
+    smallNbTracks.classList.add("text-muted");
+    smallNbTracks.textContent = alb.album.total_tracks + " tracks - " + giveAlbumDuration(alb);
+    albumNbTracks.appendChild(smallNbTracks);
+
     const addAlbumBtn = document.createElement("button");
     const plus = document.createElement("i");
     plus.classList.add("fa");
@@ -550,6 +587,7 @@ export function moreAlbumsSaved(lists) {
     albumCard.appendChild(albumImage);
     albumCard.appendChild(albumTitle);
     albumCard.appendChild(albumArtist);
+    albumCard.appendChild(albumNbTracks);
     
 
     document.getElementById("moreSavedAlbumsList").appendChild(albumCard);
