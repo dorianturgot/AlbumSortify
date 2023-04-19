@@ -21,13 +21,11 @@
       </header>
       <div class="container py-4 px-3 mx-auto">
         <h2 id="YourLists"></h2>
-        <button class="btn btn-success my-2" id="newListBtn" data-bs-toggle="modal" data-bs-target="#newListModal">Update the list</button>
-        <div>
-          <button class="btn btn-danger my-2" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete the list</button>
-        </div>
-        <div class="dropdown my-2">
+        <button class="btn btn-danger listBtn" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="fas fa-trash-alt mx-1"></i>Delete</button>
+        <button class="btn btn-success listBtn" id="newListBtn" data-bs-toggle="modal" data-bs-target="#newListModal"><i class="far fa-edit mx-1"></i>Edit</button>
+        <div class="dropdown my-5">
           <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownSort" data-bs-toggle="dropdown" aria-expanded="false">
-            Sort albums
+            <i class="fas fa-sort-alpha-up mx-2"></i>Sort albums
           </button>
           <ul class="dropdown-menu" aria-labelledby="dropdownSort">
             <li><button class="dropdown-item" type="button" id="sortNameBtn">By Name</button></li>
