@@ -4,7 +4,7 @@ var modal = document.getElementById("addToListModal");
 
 // Gets every lists from the user
 function fetchListsForAlbum(userIDSpotify, alb) {
-    fetch(`http://localhost:3000/albumlist/${userIDSpotify}`, {
+    fetch(`http://localhost:3000/albumlist/${userIDSpotify}` + "?sort=", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

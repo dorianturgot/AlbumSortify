@@ -2,7 +2,8 @@
 @import "~bootstrap/scss/bootstrap";
 
 body {
-    background-color: #292929;;
+    //background-color: #292929;
+    background-image: linear-gradient(#292929, #202020);
     color: white;
 }
 
@@ -295,4 +296,18 @@ body {
 
 .smallNbTracks {
   padding-bottom: 6%;
+}
+
+#reverseSortBtn {
+  color: white;
+  border: none;
+}
+
+#reverseSortBtn:hover {
+  color: rgb(177, 177, 177);
+}
+
+#reverseSortBtn:active {
+  border:none;
+  transform: scale(1.1);
 }

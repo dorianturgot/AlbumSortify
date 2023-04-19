@@ -43,7 +43,7 @@ if (!code && !accessToken) {
     // userIDSpotify = profile.id;
     // localStorage.setItem('userIDSpotify', profile.id);
     // populateUI(profile);
-    await fetchLists(userIDSpotify);
+    await fetchLists(userIDSpotify, "DESC");
     const albums = await fetchAlbums(accessToken);
     getAlbums(albums);
     const moreAlbums = await fetchMoreAlbums(accessToken);
@@ -229,7 +229,7 @@ export async function onSearchArtist(search) {
   const artistBtnLogo = document.createElement("i");
   artistBtn.innerText = "Albums ";
   artistBtnLogo.classList.add("fas");
-  artistBtnLogo.classList.add("fa-chevron-circle-down");
+  artistBtnLogo.classList.add("fa-chevron-circle");
   artistBtnLogo.style.color = "white";
   artistBtn.appendChild(artistBtnLogo);
 
@@ -242,7 +242,6 @@ export async function onSearchArtist(search) {
     $("#topArtistsModal").modal('toggle');
     var topArtistsAlbums = await fetchTopArtistsAlbums(accessToken, alb.id);
     getArtistAlbums(topArtistsAlbums);
-    //openAddToListModal(topArtistsAlbums);
   });
 
   albumCard.appendChild(artistBtn);
@@ -336,7 +335,7 @@ export function getLastReleases(newAlbums) {
     albumImage.src = alb.images[0].url;
     albumImage.alt = alb.id;
     albumImage.addEventListener("click", () => {
-      window.open(alb.album.external_urls.spotify, "_blank");
+      window.open(alb.external_urls.spotify, "_blank");
     });
 
     const albumTitle = document.createElement("h3");
@@ -407,9 +406,10 @@ export function getTopArtists(topArtists) {
 
     const artistBtn = document.createElement("button");
     const artistBtnLogo = document.createElement("i");
-    artistBtn.innerText = "Albums ";
+    artistBtn.innerText = "Albums";
     artistBtnLogo.classList.add("fas");
     artistBtnLogo.classList.add("fa-chevron-circle-down");
+    artistBtnLogo.classList.add("mx-1");
     artistBtnLogo.style.color = "white";
     artistBtn.appendChild(artistBtnLogo);
 
@@ -495,8 +495,8 @@ export function getArtistAlbums(artistAlbums) {
 }
 
 // Gets every lists from the user
-export async function fetchLists(userIDSpotify) {
-  fetch(`http://localhost:3000/albumlist/${userIDSpotify}`, {
+export async function fetchLists(userIDSpotify, sort) {
+  fetch(`http://localhost:3000/albumlist/${userIDSpotify}` + '?sort=' + sort, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -624,3 +624,14 @@ function giveAlbumDuration(alb) {
   duration = hours + minutes + "m " + seconds + "s";
   return duration;
 }
+
+var sortVar = "";
+
+// Sort button listener for lists
+document.getElementById("reverseSortBtn").addEventListener("click", () => {
+  fetchLists(userIDSpotify, sortVar);
+  if (sortVar === "DESC")
+    sortVar = "";
+  else
+    sortVar = "DESC"; 
+});

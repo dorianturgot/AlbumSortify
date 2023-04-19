@@ -37,7 +37,8 @@ app.get('/list/:listID', (req, res) => {
 // GET - get all lists for a user
 app.get('/albumlist/:userID', (req, res) => {
   const userID = req.params.userID;
-  const sql = `SELECT * FROM albumlist WHERE userID = \'${userID}\' ORDER BY date_created DESC`;
+  const sort = req.query.sort;
+  const sql = `SELECT * FROM albumlist WHERE userID = \'${userID}\' ORDER BY date_created ` + sort;
 
   connection.query(sql, (err, result) => {
     if (err) throw err;
