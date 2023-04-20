@@ -57,8 +57,11 @@ export function populateUI(profile) {
     }
     else {
         document.getElementById("displayName").innerText = "Welcome " + profile.display_name;
-        const profileImage = new Image(50, 50);
-        profileImage.src = profile.images[0].url;
-        document.getElementById("avatar").innerHTML = profileImage.outerHTML;
+        if(profile.images.length > 0)
+        {
+            const profileImage = new Image(50, 50);
+            profileImage.src = profile.images[0].url;
+            document.getElementById("avatar").innerHTML = profileImage.outerHTML;
+        }
     }
 }
