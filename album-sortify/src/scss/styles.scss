@@ -323,3 +323,26 @@
   text-align: right;
   margin: 0.5%;
 }
+
+@media screen and (max-width: 500px) {
+  #posterHome{
+    display:none;
+  }
+  .listContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 2fr));
+    grid-gap: 30px;
+    max-width: 80%;
+    margin: 0 auto;
+  }
+  #dropdownSort {
+    float: right;
+    text-align: right;
+    margin-top: 1rem;
+    margin-left: 100%;
+    margin-bottom: 2rem;
+  }
+  .searchbar {
+    width: 100%;
+  }
+}
