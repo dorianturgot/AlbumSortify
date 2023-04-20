@@ -18,42 +18,44 @@ logoutBtn.addEventListener("click", () => {
   console.log("logout");
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userIDSpotify');
-    window.location.href = "http://localhost:5173/";
+    window.location.href = "http://localhost:5173/home.html";
 });
 
+if (window.location.pathname === "/") {
+  window.location.href = "/index.html";
+}
 
-if (!code && !accessToken) {
-    redirectToAuthCodeFlow(clientId);
-} else {
+if(window.location.pathname === '/index.html') {
+  if (!code && !accessToken) {
+      redirectToAuthCodeFlow(clientId);
+  } else {
+      if (!accessToken) {
+        accessToken = await getAccessToken(clientId, code);
+        localStorage.setItem('accessToken', accessToken);
+      }
+      token = accessToken;
+      const profile = await fetchProfile(accessToken);
+      userIDSpotify = profile.id;
+      localStorage.setItem('userIDSpotify', profile.id);
+      populateUI(profile);
+      await fetchLists(userIDSpotify, "DESC");
+      const albums = await fetchAlbums(accessToken);
+      getAlbums(albums);
+      const moreAlbums = await fetchMoreAlbums(accessToken);
+      
+      moreAlbumsSaved(moreAlbums);
+      const newReleases = await fetchNewReleases(accessToken);
+      getLastReleases(newReleases);
+      const topArtists = await fetchTopArtists(accessToken);
+  
+      getTopArtists(topArtists);
+  }
+} else if (window.location.pathname === '/home.html') {
     if (!accessToken) {
-      accessToken = await getAccessToken(clientId, code);
-      localStorage.setItem('accessToken', accessToken);
+      window.location.href = "index.html";
+    } else {
+      window.location.href = "home.html";
     }
-    token = accessToken;
-    const profile = await fetchProfile(accessToken);
-    userIDSpotify = profile.id;
-    localStorage.setItem('userIDSpotify', profile.id);
-    populateUI(profile);
-    // if (!accessToken) {
-    //   accessToken = await getAccessToken(clientId, code);
-    //   localStorage.setItem('accessToken', accessToken);
-    // }
-    // token = accessToken;
-    // const profile = await fetchProfile(accessToken);
-    // userIDSpotify = profile.id;
-    // localStorage.setItem('userIDSpotify', profile.id);
-    // populateUI(profile);
-    await fetchLists(userIDSpotify, "DESC");
-    const albums = await fetchAlbums(accessToken);
-    getAlbums(albums);
-    const moreAlbums = await fetchMoreAlbums(accessToken);
-    
-    moreAlbumsSaved(moreAlbums);
-    const newReleases = await fetchNewReleases(accessToken);
-    getLastReleases(newReleases);
-    const topArtists = await fetchTopArtists(accessToken);
-
-    getTopArtists(topArtists);
 }
 
 export async function redirectToAuthCodeFlow(clientId) {
@@ -65,7 +67,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("response_type", "code");
-    params.append("redirect_uri", "http://localhost:5173/callback");
+    params.append("redirect_uri", "http://localhost:5173/index.html");
     params.append("scope", "user-read-private user-read-email user-library-read user-top-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
@@ -99,7 +101,7 @@ export async function getAccessToken(clientId, code) {
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", "http://localhost:5173/callback");
+    params.append("redirect_uri", "http://localhost:5173/index.html");
     params.append("code_verifier", verifier);
 
     const result = await fetch("https://accounts.spotify.com/api/token", {

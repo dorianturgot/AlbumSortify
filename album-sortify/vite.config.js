@@ -1,6 +1,6 @@
 import path from 'path';
 
-export default {
+export default ({
   root: path.resolve(__dirname, ''),
   resolve: {
     alias: {
@@ -8,5 +8,9 @@ export default {
     }
   },
   server: {
+    open: true,
+    index: "index.html",
+    host: 'localhost',
+    port: 5173,
   }
-}
+})
