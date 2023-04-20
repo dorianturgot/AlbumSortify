@@ -25,6 +25,10 @@ if (window.location.pathname === "/") {
   window.location.href = "/index.html";
 }
 
+const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
+
 if(window.location.pathname === '/index.html') {
   if (!code && !accessToken) {
       redirectToAuthCodeFlow(clientId);
@@ -229,9 +233,10 @@ export async function onSearchArtist(search) {
 
   const artistBtn = document.createElement("button");
   const artistBtnLogo = document.createElement("i");
-  artistBtn.innerText = "Albums ";
+  artistBtn.innerText = "Albums";
   artistBtnLogo.classList.add("fas");
-  artistBtnLogo.classList.add("fa-chevron-circle");
+  artistBtnLogo.classList.add("fa-chevron-circle-down");
+  artistBtnLogo.classList.add("mx-1");
   artistBtnLogo.style.color = "white";
   artistBtn.appendChild(artistBtnLogo);
 
