@@ -324,6 +324,15 @@
   margin: 0.5%;
 }
 
+.copyright {
+  color: white;
+  text-decoration: none;
+}
+
+.copyright:hover {
+  color: rgb(177, 177, 177);
+}
+
 @media screen and (max-width: 500px) {
   #posterHome{
     display:none;
