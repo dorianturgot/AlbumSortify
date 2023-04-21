@@ -9,7 +9,7 @@ app.use(express.json());
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '123',
+  password: 'PASSWORD',
   database: 'albumSortify'
 });
 
