@@ -1,3 +1,6 @@
+create database albumSortify;
+use albumSortify;
+
 create table if not exists album
 (
     id           int auto_increment
