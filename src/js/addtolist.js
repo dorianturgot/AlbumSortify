@@ -35,7 +35,7 @@ export function getListsForAlb(lists, userIDSpotify, alb) {
     const linkPage = document.createElement("a");
     linkPage.style.cursor = "pointer";
     linkPage.addEventListener("click", () => {
-      console.log("there is " + alb.total_tracks);
+      //console.log("there is " + alb.total_tracks);
       addAlbumToThisList(albumlist.id, userIDSpotify, alb);
     });
 
@@ -58,6 +58,8 @@ export async function openAddToListModal(album)
     const userIDSpotify = localStorage.getItem('userIDSpotify');
     fetchListsForAlbum(userIDSpotify, album);
 }
+
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 export function addAlbumToThisList(ListID, userIDSpotify, alb)
 {
@@ -85,15 +87,17 @@ export function addAlbumToThisList(ListID, userIDSpotify, alb)
           }
           return response.json();
         })
-        .then((data) => {
+        .then(async (data) => {
+          // Show to the user the success with an alert
           console.log("New album added to list:", data);
-          //alert("Album added successfully to list!");
           document.getElementById("successAlert").classList.remove("d-none");
           document.getElementById("failedAlert").classList.add("d-none");
+          await delay(2000);
+          document.getElementById("successAlert").classList.add("d-none");
         })
         .catch((error) => {
+          // Show to the user the error with an alert
           console.error("Error adding new album to list:", error);
-          //alert("Album already in list.");
           document.getElementById("failedAlert").classList.remove("d-none");
           document.getElementById("successAlert").classList.add("d-none");
         });

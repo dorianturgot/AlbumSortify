@@ -17,7 +17,7 @@ showAlbums('name');
 document.getElementById("logoutBtnList").addEventListener("click", () => {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('userIDSpotify');
-  window.location.href = "http://localhost:5173/home.html";
+  window.location.href = "http://localhost:4173/home.html";
 });
 
 document.getElementById('confirmDeleteListBtn').addEventListener('click', () => {
@@ -259,7 +259,6 @@ function deleteList() {
   })
   .then(data => {
     console.log("List deleted:", data);
-    //alert("List deleted successfully!");
     window.location.href = "index.html";
   })
   .catch(error => {
@@ -284,12 +283,10 @@ function deleteAllAlbumFromList() {
   })
   .then(data => {
     console.log("All album from list deleted:", data);
-    //alert("All album from list deleted successfully!");
     window.location.href = "index.html";
   })
   .catch(error => {
     console.error("Error deleting all albums from list:", error);
-    //alert("Error deleting all albums from list.");
   });
 }
 

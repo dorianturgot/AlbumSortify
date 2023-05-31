@@ -38,7 +38,6 @@ confirmBtnNewList.onclick = function() {
         })
         .then((data) => {
           console.log("New list added:", data);
-          alert("List created successfully!");
           fetchLists(userIDSpotify, "");
         })
         .catch((error) => {

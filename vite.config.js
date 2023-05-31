@@ -11,6 +11,15 @@ export default ({
     open: true,
     index: "index.html",
     host: 'localhost',
-    port: 5173,
-  }
+  },
+  build: {
+    target: 'esnext',
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        home: path.resolve(__dirname, 'home.html'),
+        list: path.resolve(__dirname, 'list.html'),
+      },
+    },
+  },
 })
