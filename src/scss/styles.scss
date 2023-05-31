@@ -189,6 +189,7 @@
   background-color: transparent;
 }
 
+
 ::-webkit-scrollbar-thumb {
   background-color: #d6dee1;
   border-radius: 20px;
@@ -196,8 +197,9 @@
   background-clip: content-box;
 }
 
-.invisible-scrollbar::-webkit-scrollbar {
-    display: none;
+
+.invisible-scrollbar{
+    scrollbar-width: none;
 }
 
 .addBtn {
