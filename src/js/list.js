@@ -17,7 +17,7 @@ showAlbums('name');
 document.getElementById("logoutBtnList").addEventListener("click", () => {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('userIDSpotify');
-  window.location.href = "http://localhost:4173/home.html";
+  window.location.href = "http://localhost:5173/home.html";
 });
 
 document.getElementById('confirmDeleteListBtn').addEventListener('click', () => {

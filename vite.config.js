@@ -12,6 +12,9 @@ export default ({
     index: "index.html",
     host: 'localhost',
   },
+  preview: {
+    port: 5173,
+  },
   build: {
     target: 'esnext',
     rollupOptions: {

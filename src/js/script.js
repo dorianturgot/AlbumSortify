@@ -18,7 +18,7 @@ logoutBtn.addEventListener("click", () => {
   console.log("logout");
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userIDSpotify');
-    window.location.href = "http://localhost:4173/home.html";
+    window.location.href = "http://localhost:5173/home.html";
 });
 
 if (window.location.pathname === "/") {
@@ -28,6 +28,8 @@ if (window.location.pathname === "/") {
 const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
 const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 
+// Sync sort variable for lists when it is inverted with the modal that let user add album to a list
+// => add global sort variable
 
 if(window.location.pathname === '/index.html') {
   if (!code && !accessToken) {
@@ -71,7 +73,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("response_type", "code");
-    params.append("redirect_uri", "http://localhost:4173/index.html");
+    params.append("redirect_uri", "http://localhost:5173/index.html");
     params.append("scope", "user-read-private user-read-email user-library-read user-top-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
@@ -105,7 +107,7 @@ export async function getAccessToken(clientId, code) {
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", "http://localhost:4173/index.html");
+    params.append("redirect_uri", "http://localhost:5173/index.html");
     params.append("code_verifier", verifier);
 
     const result = await fetch("https://accounts.spotify.com/api/token", {
@@ -126,7 +128,7 @@ export async function getAccessToken(clientId, code) {
 // Fetches the search from search bar
 export async function fetchSearch(search) {
     const query = encodeURI(search);
-    const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=album&offset=0&limit=6", {
+    const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=album&offset=0&limit=7", {
         method: "GET", headers: { Authorization: `Bearer ${token}`}
     });
 
@@ -200,7 +202,7 @@ export async function onSearch(search) {
 // Fetches the search from search bar
 export async function fetchSearchArtist(search) {
   const query = encodeURI(search);
-  const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=artist&offset=0&limit=6", {
+  const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=artist&offset=0&limit=7", {
       method: "GET", headers: { Authorization: `Bearer ${token}`}
   });
 
