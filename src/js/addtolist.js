@@ -4,7 +4,7 @@ var modal = document.getElementById("addToListModal");
 
 // Gets every lists from the user
 function fetchListsForAlbum(userIDSpotify, alb) {
-    fetch(`http://localhost:3000/albumlist/${userIDSpotify}` + "?sort=DESC", {
+    fetch(`https://albumsortify.fr:3000/albumlist/${userIDSpotify}` + "?sort=DESC", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -64,7 +64,7 @@ const delay = ms => new Promise(res => setTimeout(res, ms));
 export function addAlbumToThisList(ListID, userIDSpotify, alb)
 {
       // Make POST request to add the album to the album list
-      fetch("http://localhost:3000/albums", {
+      fetch("https://albumsortify.fr:3000/albums", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

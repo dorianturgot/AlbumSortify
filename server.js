@@ -3,8 +3,20 @@ import mysql from 'mysql2';
 import cors from 'cors';
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'https://albumsortify.fr',
+  methods: ['GET', 'PUT', 'POST', 'DELETE'],
+}));
 app.use(express.json());
+
+var allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', "*");
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, X-Auth-Token');
+};
+
+app.use(allowCrossDomain);
+
 
 const connection = mysql.createConnection({
   host: 'localhost',

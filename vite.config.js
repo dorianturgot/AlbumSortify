@@ -10,10 +10,10 @@ export default ({
   server: {
     open: true,
     index: "index.html",
-    host: 'localhost',
+    host: 'albumsortify.fr',
   },
   preview: {
-    port: 5173,
+    port: 80,
   },
   build: {
     target: 'esnext',

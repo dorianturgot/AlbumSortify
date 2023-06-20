@@ -18,7 +18,7 @@ confirmBtnNewList.onclick = function() {
       return;
     }
 
-    fetch("http://localhost:3000/albumlist", {
+    fetch("https://albumsortify.fr:3000/albumlist", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

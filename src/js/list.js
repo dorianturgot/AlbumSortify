@@ -17,7 +17,7 @@ showAlbums('name');
 document.getElementById("logoutBtnList").addEventListener("click", () => {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('userIDSpotify');
-  window.location.href = "http://localhost:5173/home.html";
+  window.location.href = "https://albumsortify.fr/home.html";
 });
 
 document.getElementById('confirmDeleteListBtn').addEventListener('click', () => {
@@ -54,7 +54,7 @@ function clearList() {
 }
 
 function showAlbums(sortBy) {
-  fetch("http://localhost:3000/list/" + listID + "?sort=" + sortBy,{
+  fetch("https://albumsortify.fr:3000/list/" + listID + "?sort=" + sortBy,{
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -173,7 +173,7 @@ function showAlbums(sortBy) {
 }
 
 function deleteAlbum (albumID) {
-  fetch("http://localhost:3000/albums/" + albumID, {
+  fetch("https://albumsortify.fr:3000/albums/" + albumID, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -214,7 +214,7 @@ confirmBtnUpdateList.onclick = function() {
     return;
   }
 
-  fetch("http://localhost:3000/albumlist/" + listID, {
+  fetch("https://albumsortify.fr:3000/albumlist/" + listID, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -244,7 +244,7 @@ confirmBtnUpdateList.onclick = function() {
 // ---------- DELETING LIST -------------
 
 function deleteList() {
-  fetch("http://localhost:3000/albumlist/" + listID, {
+  fetch("https://albumsortify.fr:3000/albumlist/" + listID, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -268,7 +268,7 @@ function deleteList() {
 }
 
 function deleteAllAlbumFromList() {
-  fetch("http://localhost:3000/album/" + listID, {
+  fetch("https://albumsortify.fr:3000/album/" + listID, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
