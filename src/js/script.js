@@ -16,7 +16,7 @@ logoutBtn.addEventListener("click", () => {
   console.log("logout");
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userIDSpotify');
-    window.location.href = "http://localhost:5173/home.html";
+    window.location.href = "https://albumsortify.fr/home.html";
 });
 
 if (window.location.pathname === "/") {
@@ -73,7 +73,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("response_type", "code");
-    params.append("redirect_uri", "http://localhost:5173/index.html");
+    params.append("redirect_uri", "https://albumsortify.fr/index.html");
     params.append("scope", "user-read-private user-read-email user-library-read user-top-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
@@ -107,7 +107,7 @@ export async function getAccessToken(clientId, code) {
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", "http://localhost:5173/index.html");
+    params.append("redirect_uri", "https://albumsortify.fr/index.html");
     params.append("code_verifier", verifier);
 
     const result = await fetch("https://accounts.spotify.com/api/token", {
