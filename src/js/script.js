@@ -1,5 +1,6 @@
 import { populateUI, fetchAlbums, fetchMoreAlbums, fetchProfile, fetchNewReleases, fetchTopArtists, fetchTopArtistsAlbums } from "./spotify.js";
 import { openAddToListModal } from "./addtolist.js";
+//import { connected } from "process";
 
 // --------------------- Start of Spotify API requirements --------------------- //
 
@@ -19,9 +20,9 @@ logoutBtn.addEventListener("click", () => {
     window.location.href = "http://localhost:5173/home.html";
 });
 
-if (window.location.pathname === "/") {
-  window.location.href = "/index.html";
-}
+// if (window.location.pathname === "/") {
+//   window.location.href = "/index.html";
+// }
 
 const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
 const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
@@ -62,7 +63,18 @@ if(window.location.pathname === '/index.html') {
     }
 }
 
-console.log(userIDSpotify);
+console.log("accessToken : " + accessToken);
+
+
+if(!accessToken) {
+  window.location.href = "home.html";
+}
+
+if(userIDSpotify == undefined) {
+  refreshToken(clientId, code);
+}
+
+console.log("userID : " + userIDSpotify);
 
 export async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
@@ -119,6 +131,27 @@ export async function getAccessToken(clientId, code) {
     const { access_token } = await result.json();
     return access_token;
 }
+
+export async function refreshToken(clientId, code) {
+  console.log("refresh token");
+  console.log("code : " + code);
+  const params = new URLSearchParams();
+  params.append("client_id", clientId);
+  params.append("grant_type", "authorization_code");
+  params.append("code", code);
+  params.append("refresh_token", accessToken);
+
+  const result = await fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: params
+  });
+
+  const { refreshToken } = await result.json();
+  console.log("new token:" + refreshToken);
+  return refreshToken;
+}
+
 
 // --------------------- End of Spotify API requirements ---------------------
 
@@ -449,7 +482,7 @@ export function getArtistAlbums(artistAlbums) {
   document.getElementById("topArtistsModalList").innerHTML = "";
   //console.log(artistAlbums);
   artistAlbums.items.forEach((alb) => {
-    if(alb.total_tracks > 1)
+    if(alb.total_tracks > 1 && alb.artists[0].name == artistAlbums.items[0].artists[0].name)
     {
       const albumCard = document.createElement("div");
       albumCard.classList.add("card");
@@ -470,7 +503,11 @@ export function getArtistAlbums(artistAlbums) {
       albumTitle.textContent = alb.name;
 
       const albumArtist = document.createElement("h4");
+
       albumArtist.textContent = alb.artists[0].name;
+      for (let i = 1; i < alb.artists.length; i++) {
+        albumArtist.textContent += ", " + alb.artists[i].name;
+      }
 
       const albumNbTracks = document.createElement("h4");
       albumNbTracks.textContent = alb.total_tracks + " Tracks";
@@ -507,7 +544,7 @@ export function getArtistAlbums(artistAlbums) {
 
 // Gets every lists from the user
 export async function fetchLists(userIDSpotify, sort) {
-  fetch(`https://albumsortify.fr:3000/albumlist/${userIDSpotify}` + '?sort=' + sort, {
+  fetch(`https://albumsortify.fr:3000/albumlist/${userIDSpotify}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -517,6 +554,9 @@ export async function fetchLists(userIDSpotify, sort) {
       return response.json();
     })
     .then((data) => {
+        // inverse the order of the lists
+        if (sort == "DESC")
+          data.reverse();
         getLists(data);
     });
 }

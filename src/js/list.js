@@ -53,8 +53,45 @@ function clearList() {
   document.getElementById('albumList').innerHTML = "";
 }
 
+function sortAlbums(sortBy, data) {
+  var sortedAlbums = [];
+  if (sortBy == "artist") {
+    sortedAlbums = data.sort((a, b) => {
+      if (a.artistName < b.artistName) {
+        return -1;
+      }
+      if (a.artistName > b.artistName) {
+        return 1;
+      }
+    });
+  }
+  // sortedAlbums = sort data per album's name
+  else if (sortBy == "name") {
+    sortedAlbums = data.sort((a, b) => {
+      if (a.name < b.name) {
+        return -1;
+      }
+      if (a.name > b.name) {
+        return 1;
+      }
+    });
+  }
+  // sortedAlbums = sort data per release date
+  else if (sortBy == "releaseDate DESC") {
+    sortedAlbums = data.sort((a, b) => {
+      if (a.releaseDate < b.releaseDate) {
+        return 1;
+      }
+      if (a.releaseDate > b.releaseDate) {
+        return -1;
+      }
+    });
+  }
+  return sortedAlbums;
+}
+
 function showAlbums(sortBy) {
-  fetch("https://albumsortify.fr:3000/list/" + listID + "?sort=" + sortBy,{
+  fetch("https://albumsortify.fr:3000/list/" + listID,{
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -65,7 +102,9 @@ function showAlbums(sortBy) {
   })
   .then(data => {
     const albumList = document.getElementById('albumList');
-      data.forEach((album) => {
+    var sortedAlbums = sortAlbums(sortBy, data); // sort data
+
+    sortedAlbums.forEach((album) => {
         const listCard = document.createElement("div");
         listCard.classList.add("card");
         listCard.classList.add("mb-3");
