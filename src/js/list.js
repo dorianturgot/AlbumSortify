@@ -17,7 +17,7 @@ showAlbums('name');
 document.getElementById("logoutBtnList").addEventListener("click", () => {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('userIDSpotify');
-  window.location.href = "http://localhost:5173/home.html";
+  window.location.href = "https://albumsortify.fr/home.html";
 });
 
 document.getElementById('confirmDeleteListBtn').addEventListener('click', () => {
@@ -339,4 +339,3 @@ function convertReleaseDate(releaseDate)
   var year = date.getFullYear();
   return month + " " + day + ", " + year;
 }
-
