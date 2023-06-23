@@ -300,4 +300,3 @@ function convertReleaseDate(releaseDate)
   var year = date.getFullYear();
   return month + " " + day + ", " + year;
 }
-
