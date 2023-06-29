@@ -14,7 +14,7 @@ WORKDIR /app
 EXPOSE 5000
 
 ENV FLASK_APP=/app/app.py
-ENV FLASK_ENV="development"
+ENV FLASK_ENV="production"
 ENV FLASK_RUN_HOST="0.0.0.0"
 ENV FLASK_RUN_PORT="3000"
 

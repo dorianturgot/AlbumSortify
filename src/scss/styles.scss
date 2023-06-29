@@ -1,6 +1,10 @@
 // Import all of Bootstrap's CSS
 @import "~bootstrap/scss/bootstrap";
 
+body {
+  font-family: 'Libre Franklin';
+}
+
 .bodyIndex {
   background: linear-gradient(#292929, #202020);
   color: white;
@@ -78,11 +82,15 @@
     border-radius: 60%;
   }
 
+  .listNameIndex {
+    font-size: 10px;
+  }
+
   .listContainer {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 2fr));
-    // grip-grap: 30px;
-    grid-gap: 50px;
+    grid-gap: 35px;
+    //grid-gap: 50px;
     max-width: 80%;
     margin: 0 auto;
   }
@@ -96,11 +104,7 @@
     width: 100%;
     height: 100px;
   }
-  
-  .listCard {
-    //background-color: #181717;
-  }
-  
+
   .listCard:hover {
     transform: scale(1.04);
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
@@ -112,6 +116,7 @@
     font-size: medium;
     padding-top: 10px;
     padding-bottom: auto;
+    font-size: 14px;
   }
 
 .cardList {
@@ -213,6 +218,10 @@
     scrollbar-width: none;
 }
 
+.thin-scrollbar {
+    scrollbar-width:  auto;
+}
+
 .addBtn {
     border-radius: 100%;
     width: fit-content;
@@ -229,6 +238,7 @@
     padding: 0px;
     display: flex;
     max-width: 130px;
+    
 }
 
 .overflowContainer {
@@ -305,7 +315,7 @@
 }
 
 .artistYear {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 300;
   color: #a0a0a0;
   font-style: italic;
@@ -387,7 +397,7 @@
   .listContainer {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(90px, 2fr));
-    grid-gap: 30px;
+    grid-gap: 20px;
     max-width: 80%;
     margin: 0 auto;
   }
@@ -401,4 +411,9 @@
   .searchbar {
     width: 100%;
   }
+  .moreAlbumContainer {
+    max-width: 100%;
+    grid-gap: 30px;
+  }
+
 }

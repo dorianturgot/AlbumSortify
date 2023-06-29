@@ -17,7 +17,7 @@ showAlbums('name');
 document.getElementById("logoutBtnList").addEventListener("click", () => {
   localStorage.removeItem('accessToken');
   localStorage.removeItem('userIDSpotify');
-  window.location.href = "http://localhost:5173/home.html";
+  window.location.href = "https://albumsortify.fr/home.html";
 });
 
 document.getElementById('confirmDeleteListBtn').addEventListener('click', () => {
@@ -186,7 +186,7 @@ function showAlbums(sortBy) {
   
         listenInSpotify.addEventListener("click", () => {
           console.log(album.spotifyID);
-          window.open("spotify:album:" + album.spotifyID, '_blank');
+          window.open("spotify:album:" + album.spotifyID, '_parent');
         });
   
         linkPage.innerHTML = listCover.outerHTML;
@@ -302,7 +302,7 @@ function deleteList() {
   })
   .catch(error => {
     console.error("Error deleting list:", error);
-    alert("Error deleting list.");
+    //alert("Error deleting list.");
   });
 }
 
@@ -335,7 +335,8 @@ function convertReleaseDate(releaseDate)
   // convert string YYYY-MM-DD to Month Day, Year
   var date = new Date(releaseDate);
   var month = date.toLocaleString('default', { month: 'long' });
+  month = month.charAt(0).toUpperCase() + month.slice(1);
   var day = date.getDate();
   var year = date.getFullYear();
-  return month + " " + day + ", " + year;
+  return day + " " + month + " " + year;
 }

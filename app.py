@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 import mysql.connector
 from flask_cors import CORS
 import ssl
+import schedule
+import time
 
 app = Flask(__name__)
 CORS(app)
@@ -13,6 +15,15 @@ connection = mysql.connector.connect(
     password='iUjUr47p',
     database='albumSortify'
 )
+
+def perform_connection_check():
+    if connection.is_connected():
+        cursor = connection.cursor()
+        cursor.execute("SELECT 1")
+        cursor.close()
+
+# Schedule connection check every hour
+schedule.every(1).hours.do(perform_connection_check)
 
 
 @app.after_request
@@ -187,4 +198,5 @@ def delete_all_albums(listID):
 
 # Run the Flask app
 if __name__ == '__main__':
+    schedule.run_continuously()
     app.run()

@@ -7,9 +7,9 @@ import { openAddToListModal } from "./addtolist.js";
 const clientId = "536df2957a654a26b8d6ca940d9390ea"; // Replace with your client ID
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
-var token;
-export var userIDSpotify;
+export var userIDSpotify = "";
 var accessToken = localStorage.getItem('accessToken');
+var refreshToken = localStorage.getItem('refresh_token');
 
 const logoutBtn = document.getElementById("logoutBtn");
 
@@ -17,43 +17,61 @@ logoutBtn.addEventListener("click", () => {
   console.log("logout");
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userIDSpotify');
-    window.location.href = "http://localhost:5173/home.html";
+    window.location.href = "https://albumsortify.fr/home.html";
 });
 
-// if (window.location.pathname === "/") {
-//   window.location.href = "/index.html";
-// }
+document.getElementById("testBtn").addEventListener("click", () => {
+  getRefreshToken(clientId, accessToken);
+  initialiseSite();
+  console.log("test");
+});
 
+if (window.location.pathname === "/") {
+   window.location.href = "/index.html";
+}
+
+// bootstrap function that let user click anywhere on the page to close the modal
 const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
 const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
 
-// Sync sort variable for lists when it is inverted with the modal that let user add album to a list
-// => add global sort variable
+async function initialiseSite() {
+  
+  const profile = await fetchProfile(accessToken);
+  userIDSpotify = profile.id;
+  // if userIDSpotify != undefined
+  localStorage.setItem('userIDSpotify', profile.id);
+  populateUI(profile);
+
+  if (userIDSpotify != undefined) {
+    await fetchLists(userIDSpotify, "DESC");
+    const albums = await fetchAlbums(accessToken);
+    getAlbums(albums);
+    const moreAlbums = await fetchMoreAlbums(accessToken);
+    
+    moreAlbumsSaved(moreAlbums);
+    const newReleases = await fetchNewReleases(accessToken);
+    getLastReleases(newReleases);
+    const topArtists = await fetchTopArtists(accessToken);
+
+    getTopArtists(topArtists);
+  }
+
+  console.log("init clientID : " + clientId);
+  console.log("init accessToken : " + accessToken);
+  console.log("init refreshToken : " + refreshToken);
+}
 
 if(window.location.pathname === '/index.html') {
   if (!code && !accessToken) {
       redirectToAuthCodeFlow(clientId);
+      console.log("after redirect code: " + code);
   } else {
       if (!accessToken) {
         accessToken = await getAccessToken(clientId, code);
+        console.log("after redirect accesstoken: " + accessToken);
         localStorage.setItem('accessToken', accessToken);
       }
-      token = accessToken;
-      const profile = await fetchProfile(accessToken);
-      userIDSpotify = profile.id;
-      localStorage.setItem('userIDSpotify', profile.id);
-      populateUI(profile);
-      await fetchLists(userIDSpotify, "DESC");
-      const albums = await fetchAlbums(accessToken);
-      getAlbums(albums);
-      const moreAlbums = await fetchMoreAlbums(accessToken);
-      
-      moreAlbumsSaved(moreAlbums);
-      const newReleases = await fetchNewReleases(accessToken);
-      getLastReleases(newReleases);
-      const topArtists = await fetchTopArtists(accessToken);
-  
-      getTopArtists(topArtists);
+      initialiseSite();
   }
 } else if (window.location.pathname === '/home.html') {
     if (!accessToken) {
@@ -63,15 +81,11 @@ if(window.location.pathname === '/index.html') {
     }
 }
 
-console.log("accessToken : " + accessToken);
-
+console.log("outsider accessToken : " + accessToken);
+console.log("outsider code : " + code);
 
 if(!accessToken) {
   window.location.href = "home.html";
-}
-
-if(userIDSpotify == undefined) {
-  refreshToken(clientId, code);
 }
 
 console.log("userID : " + userIDSpotify);
@@ -85,7 +99,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("response_type", "code");
-    params.append("redirect_uri", "http://localhost:5173/index.html");
+    params.append("redirect_uri", "https://albumsortify.fr/index.html");
     params.append("scope", "user-read-private user-read-email user-library-read user-top-read");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
@@ -119,7 +133,7 @@ export async function getAccessToken(clientId, code) {
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", "http://localhost:5173/index.html");
+    params.append("redirect_uri", "https://albumsortify.fr/index.html");
     params.append("code_verifier", verifier);
 
     const result = await fetch("https://accounts.spotify.com/api/token", {
@@ -128,18 +142,22 @@ export async function getAccessToken(clientId, code) {
         body: params
     });
 
-    const { access_token } = await result.json();
+    const { access_token, refresh_token } = await result.json();
+    //localStorage.setItem('refresh_token', refresh_token);
+    refreshToken = refresh_token;
+
     return access_token;
 }
 
-export async function refreshToken(clientId, code) {
-  console.log("refresh token");
-  console.log("code : " + code);
+export async function getRefreshToken(clientId) {
+
+  console.log("into getRefreshToken function");
+  console.log("old accessToken : " + accessToken);
+  console.log("old refreshToken : " + refreshToken);
   const params = new URLSearchParams();
   params.append("client_id", clientId);
-  params.append("grant_type", "authorization_code");
-  params.append("code", code);
-  params.append("refresh_token", accessToken);
+  params.append("grant_type", "refresh_token");
+  params.append("refresh_token", refreshToken);
 
   const result = await fetch("https://accounts.spotify.com/api/token", {
       method: "POST",
@@ -147,11 +165,20 @@ export async function refreshToken(clientId, code) {
       body: params
   });
 
-  const { refreshToken } = await result.json();
-  console.log("new token:" + refreshToken);
-  return refreshToken;
+  const { access_token, refresh_token } = await result.json();
+  console.log("new accesstoken:" + access_token);
+  console.log("new refreshtoken:" + refresh_token);
+  localStorage.setItem('refresh_token', refresh_token);
+  localStorage.setItem('accessToken', access_token);
+
+  accessToken = access_token;
+  refreshToken = refresh_token;
 }
 
+if(userIDSpotify == undefined || userIDSpotify == null) {
+  await getRefreshToken(clientId, accessToken);
+  initialiseSite();
+}
 
 // --------------------- End of Spotify API requirements ---------------------
 
@@ -162,7 +189,7 @@ export async function refreshToken(clientId, code) {
 export async function fetchSearch(search) {
     const query = encodeURI(search);
     const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=album&offset=0&limit=7", {
-        method: "GET", headers: { Authorization: `Bearer ${token}`}
+        method: "GET", headers: { Authorization: `Bearer ${accessToken}`}
     });
 
     return await result.json();
@@ -236,7 +263,7 @@ export async function onSearch(search) {
 export async function fetchSearchArtist(search) {
   const query = encodeURI(search);
   const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=artist&offset=0&limit=7", {
-      method: "GET", headers: { Authorization: `Bearer ${token}`}
+      method: "GET", headers: { Authorization: `Bearer ${accessToken}`}
   });
 
   return await result.json();
@@ -565,7 +592,6 @@ export async function fetchLists(userIDSpotify, sort) {
 export function getLists(lists) {
   document.getElementById("lists").innerHTML = "";
   lists.forEach((albumlist) => {
-    console.log(albumlist);
     const listCard = document.createElement("div");
     listCard.classList.add("card");
     listCard.classList.add("listCard");
@@ -579,8 +605,9 @@ export function getLists(lists) {
     linkPage.href = "list.html?listID=" + albumlist.id + "&listName=" + albumlist.name;
 
     const listName = document.createElement("h5");
-    listName.classList.add("card-title");
-    listName.classList.add("display-1");
+    //listName.classList.add("card-title");
+    //listName.classList.add("display-1");
+    listName.classList.add("listNameIndex");
     listName.textContent = albumlist.name;
 
     linkPage.innerHTML = listCover.outerHTML;
