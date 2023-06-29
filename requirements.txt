@@ -38,7 +38,7 @@ python-augeas==0.5.0
 python-debian==0.1.39
 python-debianbts==3.1.0
 pytz==2021.1
-PyYAML==5.3.1
+PyYAML==5.4
 requests==2.25.1
 requests-toolbelt==0.9.1
 six==1.16.0
