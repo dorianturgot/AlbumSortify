@@ -1,4 +1,4 @@
-*Made with Vite + Node.js*
+*Made with Vite + Flask*
 
 ## To install :
   - Create the database using ddb.sql
@@ -6,4 +6,4 @@
   
 ## To run :
   - `npm run dev`
-  - `node server.js`
+  - `sudo docker build . -f AlbumSortify/Dockerfile -t flask-server && sudo docker run -d --network host  flask-server --port 3306 --port 3000`
