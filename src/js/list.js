@@ -160,6 +160,8 @@ function showAlbums(sortBy) {
         smallAlbumNbTracks.textContent = album.total_tracks + " Tracks";
   
         albumNbTracks.appendChild(smallAlbumNbTracks);
+
+        var deleteDiv = document.createElement('div');
   
         var deleteBtn = document.createElement('button');
         deleteBtn.classList.add("btn");
@@ -174,6 +176,10 @@ function showAlbums(sortBy) {
         deleteBtn.addEventListener("click", () => {
           deleteAlbum(album.id);
         });
+
+        //deleteDiv.classList.add("deleteDiv");
+
+        deleteDiv.appendChild(deleteBtn);
   
         var listenInSpotify = document.createElement('button');
         listenInSpotify.classList.add("btn");
@@ -201,7 +207,7 @@ function showAlbums(sortBy) {
         card.appendChild(cardBody);
         
     
-        listCard.appendChild(deleteBtn);
+        listCard.appendChild(deleteDiv);
         listCard.appendChild(linkPage);
         
         listCard.appendChild(card);

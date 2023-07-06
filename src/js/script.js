@@ -193,8 +193,14 @@ export async function onSearch(search) {
     albumTitle.classList.add("card-title");
     albumTitle.textContent = alb.name;
 
-    const albumArtist = document.createElement("h4");
-    albumArtist.textContent = alb.artists[0].name;
+    const albumArtistText = document.createElement("h4");
+    albumArtistText.textContent = alb.artists[0].name;
+    const albumArtist = document.createElement("a");
+    albumArtist.href = alb.artists[0].external_urls.spotify;
+    albumArtist.target = "_blank";
+    albumArtist.classList.add("artistLink");
+    albumArtist.appendChild(albumArtistText);
+
 
     const albumNbTracks = document.createElement("p");
     albumNbTracks.classList.add("card-text");
@@ -314,16 +320,23 @@ export function getAlbums(albums) {
       const albumImage = document.createElement("img");
       albumImage.src = alb.album.images[0].url;
       albumImage.alt = alb.album.id;
+      //albumImage.classList.add("albumImage");
       albumImage.addEventListener("click", () => {
         window.open(alb.album.external_urls.spotify, "_blank");
       });
+
 
       const albumTitle = document.createElement("h3");
       albumTitle.classList.add("card-title");
       albumTitle.textContent = alb.album.name;
 
-      const albumArtist = document.createElement("h4");
-      albumArtist.textContent = alb.album.artists[0].name;
+      const albumArtistText = document.createElement("h4");
+      albumArtistText.textContent = alb.album.artists[0].name;
+      const albumArtist = document.createElement("a");
+      albumArtist.href = alb.album.artists[0].external_urls.spotify;
+      albumArtist.target = "_blank";
+      albumArtist.classList.add("artistLink");
+      albumArtist.appendChild(albumArtistText);
 
       const albumNbTracks = document.createElement("p");
       albumNbTracks.classList.add("card-text");
@@ -341,6 +354,7 @@ export function getAlbums(albums) {
       plus.classList.add("fa");
       plus.classList.add("fa-plus");
       plus.style.color = "white";
+      //addAlbumBtn.innerHTML = "Add to list  ";
       addAlbumBtn.appendChild(plus);
 
       addAlbumBtn.classList.add("btn");
@@ -356,7 +370,9 @@ export function getAlbums(albums) {
       albumCard.appendChild(albumImage);
       albumCard.appendChild(albumTitle);
       albumCard.appendChild(albumArtist);
+      
       albumCard.appendChild(albumNbTracks);
+
       
 
       document.getElementById("albums").appendChild(albumCard);
@@ -383,8 +399,14 @@ export function getLastReleases(newAlbums) {
     const albumTitle = document.createElement("h3");
     albumTitle.textContent = alb.name;
 
-    const albumArtist = document.createElement("h4");
-    albumArtist.textContent = alb.artists[0].name;
+    const albumArtistText = document.createElement("h4");
+    albumArtistText.textContent = alb.artists[0].name;
+    const albumArtist = document.createElement("a");
+    albumArtist.href = alb.artists[0].external_urls.spotify;
+    albumArtist.target = "_blank";
+    albumArtist.classList.add("artistLink");
+    albumArtist.appendChild(albumArtistText);
+
 
     const typeAlbum = document.createElement("h4");
     var trackStr = alb.total_tracks > 1 ? " tracks" : " track";
