@@ -9,19 +9,22 @@ app = Flask(__name__)
 CORS(app)
 
 # MySQL connection setup
-connection = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='password',
-    database='albumSortify'
-)
+def connecter():
+    return mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='password',
+        database='albumSortify'
+    )
 
 def perform_connection_check():
+    connection = connecter()
     if connection.is_connected():
         console.log("Connection refresh")
         cursor = connection.cursor()
         cursor.execute("SELECT 1")
         cursor.close()
+    connection.close()
 
 # Schedule connection check every hour
 schedule.every(1).hours.do(perform_connection_check)
@@ -40,6 +43,8 @@ def add_cors_headers(response):
 def get_albums_from_list(listID):
     sort = request.args.get('sort')
     sql = f"SELECT * FROM album WHERE listID = {listID} ORDER BY date_created;"
+
+    connection = connecter()
 
     cursor = connection.cursor()
     cursor.execute(sql)
@@ -68,6 +73,8 @@ def get_albums_from_list(listID):
         }
         final_result.append(album_dict)
 
+    connection.close()
+
 
     return jsonify(final_result), 200
 
@@ -75,7 +82,13 @@ def get_albums_from_list(listID):
 @app.route('/albumlist/<string:userID>', methods=['GET'])
 def get_album_lists(userID):
     sort = request.args.get('sort')
-    sql = f"SELECT * FROM albumlist WHERE userID = '{userID}' ORDER BY date_created;"
+    #sql = f"SELECT * FROM albumlist WHERE userID = '{userID}' ORDER BY date_created;"
+    sql = f"SELECT albumlist.*, MAX(album.date_created) AS latest_date_created FROM albumlist LEFT JOIN album ON album.listID = albumlist.id WHERE albumlist.userID = '{userID}' GROUP BY albumlist.id ORDER BY latest_date_created;"
+
+    #SELECT * FROM albumlist WHERE albumlist.userID = @userID JOIN album ON album.listID = albumlist.id ORDER BY album.date_created DESC;
+
+
+    connection = connecter()
 
     cursor = connection.cursor()
     cursor.execute(sql)
@@ -98,6 +111,8 @@ def get_album_lists(userID):
         }
         final_result.append(albumlist_dict)
 
+    connection.close()
+
     return jsonify(final_result), 200
 
 # POST - create a new list
@@ -110,6 +125,8 @@ def create_list():
 
     query = "INSERT INTO albumlist (userID, name, color) VALUES (%s, %s, %s)"
     values = (userID, name, color)
+
+    connection = connecter()
 
     cursor = connection.cursor()
     cursor.execute(query, values)
@@ -135,10 +152,14 @@ def add_album():
     query = "INSERT INTO album (userID, name, artist, picture_url, url, releaseDate, spotifyID, listID, total_tracks) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
     values = (userID, name, artist, picture_url, url, releaseDate, spotifyID, listID, total_tracks)
 
+    connection = connecter()
+
     cursor = connection.cursor()
     cursor.execute(query, values)
     connection.commit()
     cursor.close()
+
+    connection.close()
 
     return jsonify(data), 200
 
@@ -152,10 +173,14 @@ def update_albumlist(listID):
     query = "UPDATE albumlist SET name=%s, color=%s WHERE id=%s"
     values = (name, color, listID)
 
+    connection = connecter()
+
     cursor = connection.cursor()
     cursor.execute(query, values)
     connection.commit()
     cursor.close()
+
+    connection.close()
 
     return jsonify({'listID': listID, 'name': name, 'color': color}), 200
 
@@ -164,10 +189,14 @@ def update_albumlist(listID):
 def delete_album(albumID):
     sql = f"DELETE FROM album WHERE id = {albumID}"
 
+    connection = connecter()
+
     cursor = connection.cursor()
     cursor.execute(sql)
     connection.commit()
     cursor.close()
+
+    connection.close()
 
     return jsonify({'albumID': albumID}), 200
 
@@ -176,10 +205,14 @@ def delete_album(albumID):
 def delete_list(listID):
     sql = f"DELETE FROM albumlist WHERE id = {listID}"
 
+    connection = connecter()
+
     cursor = connection.cursor()
     cursor.execute(sql)
     connection.commit()
     cursor.close()
+
+    connection.close()
 
     return jsonify({'listID': listID}), 200
 
@@ -188,10 +221,14 @@ def delete_list(listID):
 def delete_all_albums(listID):
     sql = f"DELETE FROM album WHERE listID = {listID}"
 
+    connection = connecter()
+
     cursor = connection.cursor()
     cursor.execute(sql)
     connection.commit()
     cursor.close()
+
+    connection.close()
 
     return jsonify({'listID': listID}), 200
 

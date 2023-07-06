@@ -594,7 +594,13 @@ export async function fetchLists(userIDSpotify, sort) {
         if (sort == "DESC")
           data.reverse();
         getLists(data);
-    });
+    })
+    // handle error
+    .catch((err) => {
+      console.log(err);
+      window.location.reload();
+    }
+  );
 }
 
 // Displays every lists from the user
@@ -720,9 +726,16 @@ var sortVar = "";
 
 // Sort button listener for lists
 document.getElementById("reverseSortBtn").addEventListener("click", () => {
+  
   fetchLists(userIDSpotify, sortVar);
   if (sortVar === "DESC")
+  {
     sortVar = "";
+    document.getElementById("reverseSortBtn").innerHTML = "<i class=\"fas fa-sort-alpha-up\"></i>";
+  }
   else
+  {
     sortVar = "DESC"; 
+    document.getElementById("reverseSortBtn").innerHTML = "<i class=\"fas fa-sort-alpha-down\"></i>";
+  }
 });
