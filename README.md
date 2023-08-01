@@ -1,5 +1,8 @@
 *Made with Vite + Flask*
 
+https://albumsortify.fr
+
+# If you want to host your own version :
 ## To install :
   - Create the database using ddb.sql
   - `npm i`
