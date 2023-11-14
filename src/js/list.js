@@ -1,3 +1,5 @@
+import {fetchMoreAlbums} from "./spotify.js";
+
 const userIDSpotify = localStorage.getItem('userIDSpotify');
 const albumListDiv = document.querySelector("#album-list");
 
@@ -12,9 +14,13 @@ console.log('userIDSpotify = ' + userIDSpotify);
 var yourLists = document.getElementById('YourLists');
 yourLists.innerHTML += MyListName;
 
-showAlbums('name');
+// Default case : sort by last added to the list
+showAlbums('date_created');
 
 let currentSortOrder = "asc";
+
+const moreAlbums = await fetchMoreAlbums(localStorage.getItem('accessToken'));
+moreAlbumsSaved(moreAlbums);
 
 if (userIDSpotify == null) {
   console.log('user not connected');
@@ -39,6 +45,7 @@ document.getElementById('confirmDeleteListBtn').addEventListener('click', () => 
   deleteList(listID);
 });
 
+// Sort by name
 document.getElementById('sortNameBtn').addEventListener('click', () => {
   document.getElementById('sortArtistBtn').classList.remove('active');
   document.getElementById('sortNameBtn').classList.add('active');
@@ -50,6 +57,7 @@ document.getElementById('sortNameBtn').addEventListener('click', () => {
   showAlbums("name");
 });
 
+// Sort by artist
 document.getElementById('sortArtistBtn').addEventListener('click', () => {
   document.getElementById('sortArtistBtn').classList.add('active');
   document.getElementById('sortNameBtn').classList.remove('active');
@@ -61,6 +69,7 @@ document.getElementById('sortArtistBtn').addEventListener('click', () => {
   showAlbums("artist");
 });
 
+// Sort by release date
 document.getElementById('sortReleaseBtn').addEventListener('click', () => {
   document.getElementById('sortArtistBtn').classList.remove('active');
   document.getElementById('sortNameBtn').classList.remove('active');
@@ -92,6 +101,16 @@ function sortAlbums(sortBy, data) {
       }
     });
   }
+  else if (sortBy == "date_created") {
+    sortedAlbums = data.sort((a, b) => {
+      if (a.date_created < b.date_created) {
+        return currentSortOrder === "asc" ? 1 : -1;
+      }
+      if (a.date_created > b.date_created) {
+        return currentSortOrder === "asc" ? -1 : 1;
+      }
+    });
+  }
   else if (sortBy == "name") {
     sortedAlbums = data.sort((a, b) => {
       if (a.name < b.name) {
@@ -114,6 +133,7 @@ function sortAlbums(sortBy, data) {
   }
   return sortedAlbums;
 }
+
 
 function showAlbums(sortBy) {
   fetch("https://albumsortify.fr:3000/list/" + listID,{
@@ -185,6 +205,8 @@ function showAlbums(sortBy) {
         smallAlbumNbTracks.textContent = album.total_tracks + " Tracks";
   
         albumNbTracks.appendChild(smallAlbumNbTracks);
+
+        var deleteDiv = document.createElement('div');
   
         var deleteBtn = document.createElement('button');
         deleteBtn.classList.add("btn");
@@ -199,6 +221,8 @@ function showAlbums(sortBy) {
         deleteBtn.addEventListener("click", () => {
           deleteAlbum(album.id);
         });
+
+        deleteDiv.appendChild(deleteBtn);
   
         var listenInSpotify = document.createElement('button');
         listenInSpotify.classList.add("btn");
@@ -211,7 +235,7 @@ function showAlbums(sortBy) {
   
         listenInSpotify.addEventListener("click", () => {
           console.log(album.spotifyID);
-          window.open("spotify:album:" + album.spotifyID, '_parent');
+          window.open("spotify:album:" + album.spotifyID, '_blank');
         });
   
         linkPage.innerHTML = listCover.outerHTML;
@@ -226,7 +250,7 @@ function showAlbums(sortBy) {
         card.appendChild(cardBody);
         
     
-        listCard.appendChild(deleteBtn);
+        listCard.appendChild(deleteDiv);
         listCard.appendChild(linkPage);
         
         listCard.appendChild(card);
@@ -364,4 +388,202 @@ function convertReleaseDate(releaseDate)
   var day = date.getDate();
   var year = date.getFullYear();
   return day + " " + month + " " + year;
+}
+
+// -------- SEARCH BAR --------------- //
+
+const searchBar = document.getElementById("searchbar");
+searchBar.addEventListener("input", onSearchList);
+
+// Fetches the search from search bar
+export async function fetchSearchList(search) {
+  const query = encodeURI(search);
+  const result = await fetch("https://api.spotify.com/v1/search?query=" + query + "&type=album&offset=0&limit=3", {
+      method: "GET", headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}`}
+  });
+
+  return await result.json();
+}
+
+// Results from search and adds them to the page
+export async function onSearchList(search) {
+const results = await fetchSearchList(searchBar.value);
+const resultsContainer = document.getElementById("results");
+
+resultsContainer.innerHTML = "";
+
+results.albums.items.forEach((alb) => {
+  const albumCard = document.createElement("div");
+  albumCard.classList.add("card");
+  albumCard.classList.add("cardList");
+  albumCard.classList.add("card-body");
+  albumCard.classList.add("cardBodyScroll");
+
+  const albumImage = document.createElement("img");
+  albumImage.src = alb.images[0].url;
+  albumImage.alt = alb.id;
+  albumImage.addEventListener("click", () => {
+    window.open(alb.external_urls.spotify, "_blank");
+  });
+
+  const albumTitle = document.createElement("h3");
+  albumTitle.classList.add("card-title");
+  albumTitle.textContent = alb.name;
+
+  const albumArtistText = document.createElement("h4");
+  albumArtistText.textContent = alb.artists[0].name;
+  const albumArtist = document.createElement("a");
+  albumArtist.href = alb.artists[0].external_urls.spotify;
+  albumArtist.target = "_blank";
+  albumArtist.classList.add("artistLink");
+  albumArtist.appendChild(albumArtistText);
+
+
+  const albumNbTracks = document.createElement("p");
+  albumNbTracks.classList.add("card-text");
+  albumNbTracks.classList.add("artistYear");
+  albumNbTracks.classList.add("text-center");
+  albumNbTracks.classList.add("smallNbTracks");
+
+  const smallNbTracks = document.createElement("small");
+  smallNbTracks.classList.add("text-muted");
+  var trackStr = alb.total_tracks > 1 ? " tracks" : " track";
+  smallNbTracks.textContent = alb.total_tracks + trackStr;
+  albumNbTracks.appendChild(smallNbTracks);
+
+  const addAlbumBtn = document.createElement("button");
+  const plus = document.createElement("i");
+  plus.classList.add("fa");
+  plus.classList.add("fa-plus");
+  plus.style.color = "white";
+  addAlbumBtn.appendChild(plus);
+
+  addAlbumBtn.classList.add("btn");
+  addAlbumBtn.classList.add("btn-success");
+  addAlbumBtn.classList.add("addBtn");
+  addAlbumBtn.addEventListener("click", (event) => {
+    //$("#addToListModal").modal('toggle');
+    addAlbumToCurrentList(listID, userIDSpotify, alb);
+    //addtolist.openAddToListModal(alb);
+  });
+
+  
+  albumCard.appendChild(albumImage);
+  albumCard.appendChild(addAlbumBtn);
+  albumCard.appendChild(albumTitle);
+  albumCard.appendChild(albumArtist);
+  albumCard.appendChild(albumNbTracks);
+  resultsContainer.appendChild(albumCard);
+});
+}
+
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+export function addAlbumToCurrentList(ListID, userIDSpotify, alb)
+{
+      // Make POST request to add the album to the album list
+      fetch("https://albumsortify.fr:3000/albums", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userID: userIDSpotify,
+          name: alb.name,
+          artist: alb.artists[0].name,
+          picture_url: alb.images[0].url,
+          url: alb.external_urls.spotify,
+          releaseDate: alb.release_date,
+          spotifyID: alb.id,
+          listID: ListID,
+          total_tracks: alb.total_tracks,
+        }),
+      })
+        .then((response) => {
+          if (response.status === 500) {
+            throw new Error("Server Error");
+          }
+          return response.json();
+        })
+        .then(async (data) => {
+          // Show to the user the success with an alert
+          console.log("New album added to list:", data);
+          document.getElementById("successAlert").classList.remove("d-none");
+          document.getElementById("failedAlert").classList.add("d-none");
+          await delay(500);
+          document.getElementById("successAlert").classList.add("d-none");
+          location.reload();
+        })
+        .catch((error) => {
+          // Show to the user the error with an alert
+          console.error("Error adding new album to list:", error);
+          document.getElementById("failedAlert").classList.remove("d-none");
+          document.getElementById("successAlert").classList.add("d-none");
+        });
+}
+
+export function moreAlbumsSaved(lists) {
+  document.getElementById("moreSavedAlbumsList").innerHTML = "";
+  lists.items.forEach((alb) => {
+    const albumCard = document.createElement("div");
+    albumCard.classList.add("card");
+    albumCard.classList.add("cardList");
+    albumCard.classList.add("card-body");
+    albumCard.classList.add("savedAlbumsCard");
+    albumCard.classList.add("cardBodyScroll");
+
+    const albumImage = document.createElement("img");
+    albumImage.src = alb.album.images[0].url;
+    albumImage.alt = alb.album.id;
+    albumImage.addEventListener("click", () => {
+      window.open(alb.album.external_urls.spotify, "_blank");
+    });
+
+    const albumTitle = document.createElement("h3");
+    albumTitle.classList.add("card-title");
+    albumTitle.textContent = alb.album.name;
+
+    const albumArtist = document.createElement("h4");
+    albumArtist.textContent = alb.album.artists[0].name;
+
+    const albumNbTracks = document.createElement("p");
+    albumNbTracks.classList.add("card-text");
+    albumNbTracks.classList.add("artistYear");
+    albumNbTracks.classList.add("text-center");
+    albumNbTracks.classList.add("smallNbTracks");
+
+    const smallNbTracks = document.createElement("small");
+    smallNbTracks.classList.add("text-muted");
+    smallNbTracks.textContent = alb.album.total_tracks + " tracks (" + alb.album.release_date.substring(0, 4) + ")";
+    albumNbTracks.appendChild(smallNbTracks);
+
+    const addAlbumBtn = document.createElement("button");
+    const plus = document.createElement("i");
+    plus.classList.add("fa");
+    plus.classList.add("fa-plus");
+    plus.style.color = "white";
+    addAlbumBtn.appendChild(plus);
+
+    addAlbumBtn.classList.add("btn");
+    addAlbumBtn.classList.add("btn-success");
+    addAlbumBtn.classList.add("addBtn");
+    addAlbumBtn.classList.add("addBtn");
+
+    addAlbumBtn.setAttribute("data-bs-dismiss", "modal");
+
+    addAlbumBtn.addEventListener("click", (event) => { 
+      addAlbumToCurrentList(listID, userIDSpotify, alb.album);
+    });
+
+    
+    albumCard.appendChild(albumImage);
+    albumCard.appendChild(addAlbumBtn);
+    albumCard.appendChild(albumTitle);
+    albumCard.appendChild(albumArtist);
+    albumCard.appendChild(albumNbTracks);
+    
+
+    document.getElementById("moreSavedAlbumsList").appendChild(albumCard);
+
+  });
 }

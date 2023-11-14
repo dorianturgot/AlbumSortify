@@ -43,6 +43,16 @@
             <li><button class="dropdown-item" type="button" id="sortReleaseBtn">By Release date</button></li>
           </ul>
         </div>
+        <h2>Add an album<button class="btn btn-outline-secondary" id="moreSavedAlbumsBtn" data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#moreSavedAlbumsModal">Your saved albums from  <i class="fab fa-spotify"></i></button>
+        </h2> 
+        <input type="text" class="form-control searchbar" id="searchbar" name="searchbar" class="input" value="" placeholder="Search an album..">
+        <div class="container-fluid py-2 overflowContainer invisible-scrollbar">
+          <div class="d-flex flex-row flex-nowrap results invisible-scrollbar" id="results"></div>
+        </div>
+        <div class="container py-4 px-3 mx-auto">
+          <div class="alert alert-success d-none" role="alert" id="successAlert">Album added successfully to list!</div>
+          <div class="alert alert-danger d-none" role="alert" id="failedAlert">Album already in list.</div>
+        </div>
         <div class="container py-4 px-3 mx-auto">
           <div class="alert alert-success d-none" role="alert" id="deletedAlert">Album successfully deleted from list!</div>
           <div class="card-deck listContainer" id="albumList"></div>
@@ -71,6 +81,21 @@
                 <button type="button" class="btn btn-success" id="confirmBtnNewList">Confirm</button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="moreSavedAlbumsModal" tabindex="-1" role="dialog" aria-labelledby="moreSavedAlbumsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg"  role="document">
+          <div class="modal-content" >
+            <div class="modal-header">
+              <h5 class="modal-title" id="moreSavedAlbumsModalLabel">Your saved albums</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modalBackground">
+              <div class="container py-4 px-3 mx-auto">
+                <div class="card-deck listContainer moreAlbumContainer" id="moreSavedAlbumsList"></div>
+              </div>
+            </div> 
           </div>
         </div>
       </div>
