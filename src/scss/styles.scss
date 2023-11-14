@@ -82,6 +82,19 @@ body {
     border-radius: 60%;
   }
 
+  .spotifyLogoText {
+    text-align: center;
+    padding-top: 1%;
+  }
+
+  .spotifyLogo {
+    padding-top: 1%;
+    width: 8%;
+    height: auto;
+    margin: 0 auto;
+    display: block;
+  }
+
   .listNameIndex {
     font-size: 10px;
   }
@@ -105,6 +118,10 @@ body {
     height: 100px;
   }
 
+  .listCard {
+    //background-color: #181717;
+  }
+  
   .listCard:hover {
     transform: scale(1.04);
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
@@ -116,7 +133,6 @@ body {
     font-size: medium;
     padding-top: 10px;
     padding-bottom: auto;
-    font-size: 14px;
   }
 
 .cardList {
@@ -127,8 +143,9 @@ body {
 }
 
 .cardList img {
-    width: 130px;
-    height: 130px;
+    width: auto;
+    height: auto;
+    max-height:128px;
     border-radius: 0%;
 }
 
@@ -223,12 +240,16 @@ body {
 }
 
 .addBtn {
-    border-radius: 100%;
-    width: fit-content;
-    margin: 4px 2px;
-    float: right;
-    position:absolute;
-    box-shadow: 0 3px 5px  rgba(0, 0, 0, 0.2);
+  //border-radius: 100%;
+  //margin: 4px 2px;
+  width: 100%;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-radius: 0;
+  padding: 3%;
+  float: right;
+  //position:absolute;
+  box-shadow: 0 3px 5px  rgba(0, 0, 0, 0.2);
 }
 
 .cardBodyScroll {
@@ -265,10 +286,12 @@ body {
 }
 
 .albumCover {
+  width: 100%;
   text-align: center; 
-  padding-top: 5px;
+  padding-top: 3%;
   cursor: none;
 }
+
 
 .albumCard h5 {
   text-align: center;
@@ -279,14 +302,15 @@ body {
 }
 
 .deleteBtn {
-  padding: auto;
-  // width: 60px;
-  // height: 25px;
-  font-size: 15px;
-  position: absolute;
-  float: right;
-  margin: 5px;
-  border-radius: 100%;
+  //border-radius: 100%;
+  //margin: 4px 2px;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+
   box-shadow: 0 3px 5px  rgba(0, 0, 0, 0.2);
 }
 
@@ -302,10 +326,11 @@ body {
 }
 
 .albumCoverList {
-  width: 130px;
-  height: 130px;
-  border-radius: 4px;
+  width: auto;
+  max-height: 128px;
+  //border-radius: 4px;
 }
+
 
 .artistName {
   font-size: 15px;
@@ -388,6 +413,11 @@ body {
   border-radius: 100%;
   margin: auto;
   padding: auto;
+}
+
+.artistLink {
+  color: white;
+  text-decoration: none;
 }
 
 #refreshBtn {

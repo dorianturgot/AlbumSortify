@@ -50,6 +50,8 @@ async function initialiseSite() {
     const albums = await fetchAlbums(accessToken);
     getAlbums(albums);
     const moreAlbums = await fetchMoreAlbums(accessToken);
+
+    localStorage.setItem('moreAlbums', moreAlbums);
     
     moreAlbumsSaved(moreAlbums);
     const newReleases = await fetchNewReleases(accessToken);
@@ -229,8 +231,14 @@ export async function onSearch(search) {
     albumTitle.classList.add("card-title");
     albumTitle.textContent = alb.name;
 
-    const albumArtist = document.createElement("h4");
-    albumArtist.textContent = alb.artists[0].name;
+    const albumArtistText = document.createElement("h4");
+    albumArtistText.textContent = alb.artists[0].name;
+    const albumArtist = document.createElement("a");
+    albumArtist.href = alb.artists[0].external_urls.spotify;
+    albumArtist.target = "_blank";
+    albumArtist.classList.add("artistLink");
+    albumArtist.appendChild(albumArtistText);
+
 
     const albumNbTracks = document.createElement("p");
     albumNbTracks.classList.add("card-text");
@@ -259,8 +267,9 @@ export async function onSearch(search) {
       openAddToListModal(alb);
     });
 
-    albumCard.appendChild(addAlbumBtn);
+    
     albumCard.appendChild(albumImage);
+    albumCard.appendChild(addAlbumBtn);
     albumCard.appendChild(albumTitle);
     albumCard.appendChild(albumArtist);
     albumCard.appendChild(albumNbTracks);
@@ -388,8 +397,9 @@ export function getAlbums(albums) {
         openAddToListModal(alb.album);
       });
 
-      albumCard.appendChild(addAlbumBtn);
+      
       albumCard.appendChild(albumImage);
+      albumCard.appendChild(addAlbumBtn);
       albumCard.appendChild(albumTitle);
       albumCard.appendChild(albumArtist);
       albumCard.appendChild(albumNbTracks);
@@ -446,8 +456,8 @@ export function getLastReleases(newAlbums) {
       openAddToListModal(alb);
     });
 
-    albumCard.appendChild(addAlbumBtn);
     albumCard.appendChild(albumImage);
+    albumCard.appendChild(addAlbumBtn);
     albumCard.appendChild(albumTitle);
     albumCard.appendChild(albumArtist);
     //albumCard.appendChild(hr);
@@ -566,8 +576,9 @@ export function getArtistAlbums(artistAlbums) {
         openAddToListModal(alb);
       });
 
-      albumCard.appendChild(addAlbumBtn);
+      
       albumCard.appendChild(albumImage);
+      albumCard.appendChild(addAlbumBtn);
       albumCard.appendChild(albumTitle);
       albumCard.appendChild(albumArtist);
       albumCard.appendChild(albumNbTracks);
@@ -635,7 +646,7 @@ export function getLists(lists) {
 }
 
 
-// Displays every lists from the user
+// Displays every albims liked from the user
 export function moreAlbumsSaved(lists) {
   document.getElementById("moreSavedAlbumsList").innerHTML = "";
   lists.items.forEach((alb) => {
@@ -690,8 +701,9 @@ export function moreAlbumsSaved(lists) {
       openAddToListModal(alb.album);
     });
 
-    albumCard.appendChild(addAlbumBtn);
+    
     albumCard.appendChild(albumImage);
+    albumCard.appendChild(addAlbumBtn);
     albumCard.appendChild(albumTitle);
     albumCard.appendChild(albumArtist);
     albumCard.appendChild(albumNbTracks);
