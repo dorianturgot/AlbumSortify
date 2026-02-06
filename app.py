@@ -118,4 +118,61 @@ def add_album():
     values = (
         data["userID"], data["name"], data["artist"],
         data["picture_url"], data["url"], data["releaseDate"],
-        data["spotif]()
+        data["spotifyID"], data["listID"], data["total_tracks"]
+    )
+
+    connection = connecter()
+    try:
+        cursor = connection.cursor()
+        cursor.execute(sql, values)
+    finally:
+        cursor.close()
+        connection.close()
+
+    return jsonify(data), 201
+
+
+@app.route("/albumlist/<int:listID>", methods=["PUT"])
+def update_albumlist(listID):
+    data = request.json
+    sql = "UPDATE albumlist SET name=%s, color=%s WHERE id=%s"
+
+    connection = connecter()
+    try:
+        cursor = connection.cursor()
+        cursor.execute(sql, (data["name"], data["color"], listID))
+    finally:
+        cursor.close()
+        connection.close()
+
+    return jsonify({"listID": listID}), 200
+
+
+@app.route("/albums/<int:albumID>", methods=["DELETE"])
+def delete_album(albumID):
+    sql = "DELETE FROM album WHERE id=%s"
+
+    connection = connecter()
+    try:
+        cursor = connection.cursor()
+        cursor.execute(sql, (albumID,))
+    finally:
+        cursor.close()
+        connection.close()
+
+    return jsonify({"albumID": albumID}), 200
+
+
+@app.route("/albumlist/<int:listID>", methods=["DELETE"])
+def delete_list(listID):
+    sql = "DELETE FROM albumlist WHERE id=%s"
+
+    connection = connecter()
+    try:
+        cursor = connection.cursor()
+        cursor.execute(sql, (listID,))
+    finally:
+        cursor.close()
+        connection.close()
+
+    return jsonify({"listID": listID}), 200
