@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .invisible-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .invisible-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
