@@ -10,8 +10,17 @@ import { authOptions } from "@/lib/auth";
 const libre = Libre_Franklin({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "AlbumSortify",
-  description: "Sort and manage your favorite Spotify albums",
+  title: "AlbumSortify - Organize your Spotify music",
+  description: "Create beautiful, custom color-coded collections of your favorite Spotify albums and artists.",
+  openGraph: {
+    title: "AlbumSortify",
+    description: "Create beautiful, custom color-coded collections of your favorite Spotify albums and artists.",
+    url: "https://albumsortify.fr",
+    siteName: "AlbumSortify",
+    locale: "en_US",
+    type: "website",
+  },
+  themeColor: "#1db954",
 };
 
 export default async function RootLayout({ children }) {

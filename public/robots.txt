@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Bloquer l'indexation des pages privées (bien qu'elles soient protégées, c'est une bonne pratique)
+Disallow: /dashboard
+Disallow: /list/
+Disallow: /artist/
+
+Host: https://albumsortify.fr
