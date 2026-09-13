@@ -21,6 +21,12 @@ export const metadata = {
     type: "website",
   },
   themeColor: "#1db954",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "AlbumSortify",
+  },
 };
 
 export default async function RootLayout({ children }) {
@@ -59,6 +65,18 @@ export default async function RootLayout({ children }) {
             © 2026 Copyright: <a href="https://github.com/dorianturgot" target="_blank" rel="noreferrer" className="hover:text-[#1db954] transition-colors">Dorian TURGOT</a>
           </footer>
         </Providers>
+        
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js');
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );
