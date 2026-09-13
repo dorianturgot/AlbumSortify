@@ -62,10 +62,10 @@ export default function AddAlbumButton({ album }) {
           e.stopPropagation();
           setIsOpen(true);
         }}
-        className="absolute top-2 right-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 bg-green-500 hover:bg-green-600 text-white p-2 rounded-full shadow-lg transition-opacity z-10"
+        className="absolute top-2 right-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 bg-green-500 hover:bg-green-600 text-white p-3 sm:p-2 rounded-full shadow-lg transition-opacity z-10"
         title="Add to a list"
       >
-        <FaPlus size={12} />
+        <FaPlus className="w-4 h-4 sm:w-3 sm:h-3" />
       </button>
 
       {isOpen && typeof document !== "undefined" && createPortal(
