@@ -77,7 +77,8 @@ export default function AddAlbumButton({ album }) {
           }}
         >
           <div 
-            className="bg-[#181818] rounded-2xl p-6 w-full max-w-sm relative shadow-2xl border border-white/10"
+            id="modal-content"
+            className="bg-[#181818] rounded-2xl p-6 w-full max-w-sm relative shadow-2xl border border-white/10 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <button 
@@ -108,7 +109,15 @@ export default function AddAlbumButton({ album }) {
                   return (
                     <button
                       key={list.id}
-                      onClick={() => handleAdd(list.id)}
+                      onClick={async () => {
+                        await handleAdd(list.id);
+                        // Show temporary mini-toast
+                        const toast = document.createElement("div");
+                        toast.className = "absolute bottom-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-full shadow-2xl text-sm font-bold z-50 animate-bounce";
+                        toast.innerText = "Album added!";
+                        document.getElementById("modal-content").appendChild(toast);
+                        setTimeout(() => toast.remove(), 2000);
+                      }}
                       disabled={loading || isAdded}
                       className={`w-full text-left px-4 py-3 rounded-xl flex items-center justify-between transition-colors ${
                         isAdded ? "bg-green-500/20 text-green-400 cursor-default" : "bg-white/5 hover:bg-white/10 text-white disabled:opacity-50"
