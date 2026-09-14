@@ -32,13 +32,10 @@ export default function AddAlbumButton({ album }) {
 
   const showToast = (message, colorClass = "bg-green-500") => {
     const toast = document.createElement("div");
-    toast.className = `absolute bottom-4 left-1/2 -translate-x-1/2 ${colorClass} text-white px-4 py-2 rounded-full shadow-2xl text-sm font-bold z-50 animate-bounce`;
+    toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 ${colorClass} text-white px-6 py-3 rounded-full shadow-2xl text-sm font-bold z-[200] animate-bounce`;
     toast.innerText = message;
-    const modalContent = document.getElementById("modal-content");
-    if (modalContent) {
-      modalContent.appendChild(toast);
-      setTimeout(() => toast.remove(), 2000);
-    }
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
   };
 
   const handleToggle = async (listId, isAdded, albumInDb) => {
