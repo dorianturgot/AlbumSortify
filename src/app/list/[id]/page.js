@@ -9,6 +9,7 @@ import SearchAlbums from "./SearchAlbums";
 import DeleteListButton from "./DeleteListButton";
 import EditListButton from "./EditListButton";
 import ShareListButton from "./ShareListButton";
+import SortableCollection from "./SortableCollection";
 
 export default async function ListPage({ params }) {
   const session = await getServerSession(authOptions);
@@ -54,8 +55,10 @@ export default async function ListPage({ params }) {
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white drop-shadow-xl mb-2 tracking-tight line-clamp-2">
               {list.name}
             </h1>
-            <p className="text-white/80 font-medium text-lg flex items-center gap-2">
-              <FaCompactDisc /> {list.albums.length} {list.albums.length > 1 ? "albums" : "album"}
+            <p className="text-white/80 font-medium text-lg flex items-center gap-2 flex-wrap">
+              <span className="flex items-center gap-2"><FaCompactDisc /> {list.albums.length} {list.albums.length === 1 ? "album" : "albums"}</span>
+              <span className="text-white/50 hidden sm:inline">•</span>
+              <span className="text-white/70 text-base">Created on {new Date(list.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
             </p>
           </div>
           <div className="flex items-center gap-3 self-end sm:self-auto">
@@ -81,38 +84,7 @@ export default async function ListPage({ params }) {
       )}
 
 
-      <section className="bg-white/5 backdrop-blur-xl p-6 md:p-8 rounded-3xl shadow-2xl ring-1 ring-inset ring-white/10">
-        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-          <FaCompactDisc className="text-blue-400" /> Collection
-        </h2>
-        {list.albums.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-white/50 text-lg">This list is empty. {isOwner ? "Search for an album above to add it!" : ""}</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-6">
-            {list.albums.map((album) => (
-              <div key={album.id} className="relative group cursor-pointer">
-                <Link href={album.url} target="_blank" rel="noreferrer" className="block">
-                  <div className="relative overflow-hidden rounded-xl shadow-lg">
-                    <img 
-                      src={album.pictureUrl} 
-                      alt={album.name} 
-                      className="w-full aspect-square object-cover transform group-hover:scale-110 transition-transform duration-500" 
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300" />
-                  </div>
-                  <div className="mt-2 sm:mt-3">
-                    <h4 className="font-bold text-xs sm:text-sm truncate text-white group-hover:text-green-400 transition-colors">{album.name}</h4>
-                    <p className="text-[10px] sm:text-xs text-white/60 truncate">{album.artist}</p>
-                  </div>
-                </Link>
-                {isOwner && <ListActions albumId={album.id} />}
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+      <SortableCollection initialAlbums={list.albums} isOwner={isOwner} />
     </div>
   );
 }

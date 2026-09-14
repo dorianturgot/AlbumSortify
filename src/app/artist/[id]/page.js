@@ -82,7 +82,7 @@ export default async function ArtistPage({ params }) {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-6">
             {uniqueAlbums.map((album) => (
               <div key={album.id} className="relative group cursor-pointer">
-                <Link href={album.external_urls.spotify} target="_blank" rel="noreferrer" className="block">
+                <Link href={album.uri || `spotify:album:${album.id}`} className="block">
                   <div className="relative overflow-hidden rounded-xl shadow-lg">
                     <img 
                       src={album.images[0]?.url} 

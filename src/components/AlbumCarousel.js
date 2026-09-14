@@ -18,7 +18,7 @@ export default function AlbumCarousel({ items, userLists = [] }) {
       <div className="flex space-x-4 py-4 cursor-grab active:cursor-grabbing">
         {items.map((album) => (
           <div key={album.id} className="flex-none w-36 sm:w-40 group relative">
-            <Link href={album.external_urls?.spotify || "#"} target="_blank" rel="noreferrer" draggable="false">
+            <Link href={album.uri || `spotify:album:${album.id}`} draggable="false">
               <div className="relative">
                 <img 
                   src={album.images[0]?.url} 
