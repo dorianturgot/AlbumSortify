@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+import { FaPlus } from "react-icons/fa";
+
 export default function SearchAlbums({ listId }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -96,9 +98,9 @@ export default function SearchAlbums({ listId }) {
               </div>
               <button 
                 onClick={() => handleAddAlbum(album)}
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 bg-green-500 text-white rounded-full p-2 transition-opacity shadow-lg"
+                className="absolute top-2 right-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 bg-green-500 hover:bg-green-600 text-white p-3 sm:p-2 rounded-full shadow-lg transition-opacity z-10"
               >
-                +
+                <FaPlus className="w-4 h-4 sm:w-3 sm:h-3" />
               </button>
             </div>
           ))}

@@ -15,41 +15,72 @@ export default function AddAlbumButton({ album }) {
 
   useEffect(() => {
     if (isOpen) {
-      setIsFetchingLists(true);
-      fetch("/api/lists")
-        .then((res) => res.json())
-        .then((data) => {
-          setLists(data);
-          setIsFetchingLists(false);
-        });
-      setAddedListIds([]); // Reset feedback when opening
+      fetchLists();
     }
   }, [isOpen]);
 
-  const handleAdd = async (listId) => {
-    if (addedListIds.includes(listId)) return; // Already added in this session
-    
-    setLoading(true);
-    const res = await fetch("/api/albums", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: album.name,
-        artist: album.artists?.map((a) => a.name).join(", ") || "",
-        pictureUrl: album.images?.[0]?.url || "",
-        url: album.external_urls?.spotify || "",
-        releaseDate: album.release_date || "",
-        spotifyId: album.id,
-        totalTracks: album.total_tracks || 0,
-        listId,
-      }),
-    });
+  const fetchLists = async () => {
+    setIsFetchingLists(true);
+    try {
+      const res = await fetch("/api/lists");
+      const data = await res.json();
+      setLists(data);
+    } finally {
+      setIsFetchingLists(false);
+    }
+  };
 
-    if (res.ok) {
-      setAddedListIds((prev) => [...prev, listId]);
-      router.refresh();
-    } else {
-      alert("Error or album already in list.");
+  const showToast = (message, colorClass = "bg-green-500") => {
+    const toast = document.createElement("div");
+    toast.className = `absolute bottom-4 left-1/2 -translate-x-1/2 ${colorClass} text-white px-4 py-2 rounded-full shadow-2xl text-sm font-bold z-50 animate-bounce`;
+    toast.innerText = message;
+    const modalContent = document.getElementById("modal-content");
+    if (modalContent) {
+      modalContent.appendChild(toast);
+      setTimeout(() => toast.remove(), 2000);
+    }
+  };
+
+  const handleToggle = async (listId, isAdded, albumInDb) => {
+    setLoading(true);
+    
+    if (isAdded && albumInDb) {
+      // Remove album
+      const res = await fetch(`/api/albums/${albumInDb.id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        showToast("Album removed!", "bg-red-500");
+        fetchLists();
+        router.refresh();
+      } else {
+        alert("Error removing album.");
+      }
+    } else if (!isAdded) {
+      // Add album
+      const res = await fetch("/api/albums", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: album.name,
+          artist: album.artists?.map((a) => a.name).join(", ") || "",
+          pictureUrl: album.images?.[0]?.url || "",
+          url: album.external_urls?.spotify || "",
+          releaseDate: album.release_date || "",
+          spotifyId: album.id,
+          totalTracks: album.total_tracks || 0,
+          listId,
+        }),
+      });
+
+      if (res.ok) {
+        showToast("Album added!", "bg-green-500");
+        fetchLists();
+        router.refresh();
+      } else {
+        alert("Error or album already in list.");
+      }
     }
     setLoading(false);
   };
@@ -102,26 +133,17 @@ export default function AddAlbumButton({ album }) {
                 <p className="text-gray-400 text-center py-4">No lists available</p>
               ) : (
                 lists.map((list) => {
-                  const isAlreadyInDB = list.albums?.some((a) => a.spotifyId === album.id);
-                  const isAddedSession = addedListIds.includes(list.id);
-                  const isAdded = isAlreadyInDB || isAddedSession;
+                  const albumInDb = list.albums?.find((a) => a.spotifyId === album.id);
+                  const isAdded = !!albumInDb;
 
                   return (
                     <button
                       key={list.id}
-                      onClick={async () => {
-                        await handleAdd(list.id);
-                        // Show temporary mini-toast
-                        const toast = document.createElement("div");
-                        toast.className = "absolute bottom-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-full shadow-2xl text-sm font-bold z-50 animate-bounce";
-                        toast.innerText = "Album added!";
-                        document.getElementById("modal-content").appendChild(toast);
-                        setTimeout(() => toast.remove(), 2000);
-                      }}
-                      disabled={loading || isAdded}
+                      onClick={() => handleToggle(list.id, isAdded, albumInDb)}
+                      disabled={loading}
                       className={`w-full text-left px-4 py-3 rounded-xl flex items-center justify-between transition-colors ${
-                        isAdded ? "bg-green-500/20 text-green-400 cursor-default" : "bg-white/5 hover:bg-white/10 text-white disabled:opacity-50"
-                      }`}
+                        isAdded ? "bg-green-500/20 text-green-400 hover:bg-green-500/30" : "bg-white/5 hover:bg-white/10 text-white"
+                      } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                       <div className="flex items-center">
                         <div 
