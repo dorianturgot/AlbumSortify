@@ -20,13 +20,16 @@ export const metadata = {
     locale: "en_US",
     type: "website",
   },
-  themeColor: "#1db954",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "AlbumSortify",
   },
+};
+
+export const viewport = {
+  themeColor: "#1db954",
 };
 
 export default async function RootLayout({ children }) {

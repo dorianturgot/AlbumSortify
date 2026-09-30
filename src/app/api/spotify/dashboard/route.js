@@ -106,7 +106,7 @@ export async function GET(req) {
     return NextResponse.json({
       savedAlbums: savedAlbumsExt?.items?.slice(0, 20).map(i => i.album) || [],
       newReleases: recentReleases,
-      topArtists: (longTermArtists?.items || []).slice(0, 20) // Display top 20 long-term artists on the UI
+      topArtists: topArtistsForUI
     });
   } catch (error) {
     console.error("Failed to fetch dashboard widgets from Spotify:", error);
