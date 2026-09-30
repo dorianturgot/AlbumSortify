@@ -68,7 +68,7 @@ export default function SpotifyDashboardWidgets({ userLists }) {
         <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
           <FaStar className="text-yellow-400" /> New releases
         </h2>
-        <AlbumCarousel items={data.newReleases} userLists={userLists} />
+        <AlbumCarousel items={data.newReleases} userLists={userLists} showDate={true} />
       </section>
 
       <section className="pb-10">

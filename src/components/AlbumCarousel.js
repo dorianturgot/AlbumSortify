@@ -4,7 +4,7 @@ import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import AddAlbumButton from "./AddAlbumButton";
 
-export default function AlbumCarousel({ items, userLists = [] }) {
+export default function AlbumCarousel({ items, userLists = [], showDate = false }) {
   const [emblaRef] = useEmblaCarousel({
     align: "start",
     dragFree: true,
@@ -15,7 +15,7 @@ export default function AlbumCarousel({ items, userLists = [] }) {
 
   return (
     <div className="overflow-hidden" ref={emblaRef}>
-      <div className="flex space-x-4 py-4 cursor-grab active:cursor-grabbing">
+      <div className="flex space-x-4 py-4 cursor-grab active:cursor-grabbing select-none">
         {items.map((album) => (
           <div key={album.id} className="flex-none w-36 sm:w-40 group relative">
             <Link href={album.uri || `spotify:album:${album.id}`} draggable="false">
@@ -24,13 +24,13 @@ export default function AlbumCarousel({ items, userLists = [] }) {
                   src={album.images[0]?.url} 
                   alt={album.name} 
                   draggable="false"
-                  className="w-36 h-36 sm:w-40 sm:h-40 object-cover rounded-md shadow-lg group-hover:opacity-75 transition-opacity pointer-events-none" 
+                  className="w-36 h-36 sm:w-40 sm:h-40 object-cover rounded-md shadow-lg group-hover:opacity-75 transition-opacity pointer-events-none select-none" 
                 />
               </div>
               <div className="mt-3">
                 <h4 className="font-bold text-sm truncate text-gray-100">{album.name}</h4>
                 <p className="text-xs text-gray-400 truncate">{album.artists?.map(a => a.name).join(", ")}</p>
-                {album.release_date && (
+                {showDate && album.release_date && (
                   <p className="text-[10px] text-gray-500 font-medium mt-0.5">
                     {new Date(album.release_date).toLocaleDateString("en-GB", {
                       day: "numeric",
