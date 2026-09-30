@@ -47,6 +47,13 @@ export default function SpotifyDashboardWidgets({ userLists }) {
   }
 
   if (!data) return null;
+  if (data.error) {
+    return (
+      <div className="p-8 text-center text-red-400 bg-red-400/10 rounded-2xl">
+        <p>Failed to load Spotify data. Please try refreshing the page.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-16 animate-in fade-in duration-500">

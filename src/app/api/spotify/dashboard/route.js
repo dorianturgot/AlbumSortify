@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { fetchSavedAlbums, fetchNewReleases, fetchTopArtists } from "@/lib/spotify";
+import { fetchSavedAlbums, fetchNewReleases, fetchTopArtists, fetchArtistAlbums } from "@/lib/spotify";
 
 export async function GET(req) {
   const session = await getServerSession(authOptions);
