@@ -8,7 +8,6 @@ const scopes = [
   "user-read-email",
   "user-library-read",
   "user-top-read",
-  "user-follow-read",
 ].join(" ");
 
 const spotifyProfile = {
