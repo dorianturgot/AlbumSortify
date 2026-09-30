@@ -4,6 +4,7 @@ import { Libre_Franklin } from "next/font/google";
 import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
 import CurrentlyPlaying from "@/components/CurrentlyPlaying";
+import UpdateNotification from "@/components/UpdateNotification";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 
@@ -48,6 +49,7 @@ export default async function RootLayout({ children }) {
                 <div className="flex items-center gap-6">
                   <CurrentlyPlaying />
                   <div className="flex items-center gap-3">
+                    <UpdateNotification />
                     <img 
                       src={session.user.image} 
                       alt={session.user.name} 
