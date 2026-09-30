@@ -3,87 +3,104 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { fetchSavedAlbums, fetchTopArtists, fetchArtistAlbums, fetchFollowedArtists } from "@/lib/spotify";
 
+// Global cache for heavy new releases computation
+const newReleasesCache = new Map();
+
 export async function GET(req) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    // Fetch saved albums, top artists, and followed artists safely
-    const [savedAlbumsExt, shortTermArtists, mediumTermArtists, longTermArtists, followedArtistsRes] = await Promise.all([
-      fetchSavedAlbums(session.user.id, 50).catch(() => null),
-      fetchTopArtists(session.user.id, 50, "short_term").catch(() => null),
-      fetchTopArtists(session.user.id, 50, "medium_term").catch(() => null),
-      fetchTopArtists(session.user.id, 50, "long_term").catch(() => null),
-      fetchFollowedArtists(session.user.id, 50).catch(() => null)
-    ]);
+    // We always fetch saved albums (fast, 1 request) to keep it real-time
+    const savedAlbumsExt = await fetchSavedAlbums(session.user.id, 50).catch(() => null);
 
-    // Combine and deduplicate artists from all these sources
-    const uniqueArtistsMap = new Map();
+    const cacheKey = session.user.id;
+    const cachedReleases = newReleasesCache.get(cacheKey);
+    let recentReleases = [];
+    let topArtistsForUI = [];
 
-    const addArtist = (artist) => {
-      if (artist && artist.id && !uniqueArtistsMap.has(artist.id)) {
-        uniqueArtistsMap.set(artist.id, artist);
-      }
-    };
-
-    [...(shortTermArtists?.items || []), ...(mediumTermArtists?.items || []), ...(longTermArtists?.items || [])].forEach(addArtist);
-    
-    // Add explicitly followed artists
-    if (followedArtistsRes && followedArtistsRes.artists && followedArtistsRes.artists.items) {
-      followedArtistsRes.artists.items.forEach(addArtist);
-    }
-
-    // Add artists from recently saved albums
-    if (savedAlbumsExt && savedAlbumsExt.items) {
-      savedAlbumsExt.items.forEach(item => {
-        if (item.album && item.album.artists) {
-          item.album.artists.forEach(addArtist);
-        }
-      });
-    }
-    
-    // Convert back to array (can be up to 100 artists)
-    const allTopArtists = Array.from(uniqueArtistsMap.values());
-
-    // Batch requests to avoid rate limits (Promise.all is fine for ~100 requests, but let's be safe)
-    const artistAlbumsPromises = allTopArtists.map(artist => 
-       fetchArtistAlbums(session.user.id, artist.id).catch(() => null)
-    );
-    const artistAlbumsResults = await Promise.all(artistAlbumsPromises);
-
-    let personalizedReleases = [];
-    const seenAlbumNames = new Set();
-
-    artistAlbumsResults.forEach(res => {
-       if (res && res.items && res.items.length > 0) {
-           // Spotify returns them sorted by release date. Let's check the first few.
-           for (const album of res.items) {
-               // Spotify groups EPs and Singles both as "single". We filter out 1-2 track singles.
-               const isSingle = album.album_type === "single" && album.total_tracks < 3;
-               
-               if (!seenAlbumNames.has(album.name) && !isSingle) {
-                   seenAlbumNames.add(album.name);
-                   personalizedReleases.push(album);
-                   // We only care about the very last release per artist to ensure diversity
-                   break;
-               }
-           }
-       }
-    });
-
-    // Sort all gathered releases by release_date (newest first)
-    personalizedReleases.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
-    
-    // Filter by 3 months, but if that gives less than 25, just keep the top 25 newest anyway
-    const threeMonthsAgo = new Date();
-    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-    
-    let recentReleases = personalizedReleases.filter(a => new Date(a.release_date || 0) >= threeMonthsAgo);
-    
-    if (recentReleases.length < 25) {
-      recentReleases = personalizedReleases.slice(0, 25);
+    // Cache the heavy "New Releases" computation for 30 minutes
+    if (cachedReleases && Date.now() - cachedReleases.timestamp < 1000 * 60 * 30) {
+      recentReleases = cachedReleases.data;
+      topArtistsForUI = cachedReleases.topArtists;
     } else {
-      recentReleases = recentReleases.slice(0, 25);
+      // Fetch top artists and followed artists
+      const [shortTermArtists, mediumTermArtists, longTermArtists, followedArtistsRes] = await Promise.all([
+        fetchTopArtists(session.user.id, 50, "short_term").catch(() => null),
+        fetchTopArtists(session.user.id, 50, "medium_term").catch(() => null),
+        fetchTopArtists(session.user.id, 50, "long_term").catch(() => null),
+        fetchFollowedArtists(session.user.id, 50).catch(() => null)
+      ]);
+
+      // Combine and deduplicate artists from all these sources
+      const uniqueArtistsMap = new Map();
+
+      const addArtist = (artist) => {
+        if (artist && artist.id && !uniqueArtistsMap.has(artist.id)) {
+          uniqueArtistsMap.set(artist.id, artist);
+        }
+      };
+
+      [...(shortTermArtists?.items || []), ...(mediumTermArtists?.items || []), ...(longTermArtists?.items || [])].forEach(addArtist);
+      
+      if (followedArtistsRes && followedArtistsRes.artists && followedArtistsRes.artists.items) {
+        followedArtistsRes.artists.items.forEach(addArtist);
+      }
+
+      if (savedAlbumsExt && savedAlbumsExt.items) {
+        savedAlbumsExt.items.forEach(item => {
+          if (item.album && item.album.artists) {
+            item.album.artists.forEach(addArtist);
+          }
+        });
+      }
+      
+      // Convert back to array and limit to max 80 artists to avoid network overload
+      const allTopArtists = Array.from(uniqueArtistsMap.values()).slice(0, 80);
+
+      // Batch requests to fetch their latest albums
+      const artistAlbumsPromises = allTopArtists.map(artist => 
+         fetchArtistAlbums(session.user.id, artist.id).catch(() => null)
+      );
+      const artistAlbumsResults = await Promise.all(artistAlbumsPromises);
+
+      let personalizedReleases = [];
+      const seenAlbumNames = new Set();
+
+      artistAlbumsResults.forEach(res => {
+         if (res && res.items && res.items.length > 0) {
+             for (const album of res.items) {
+                 const isSingle = album.album_type === "single" && album.total_tracks < 3;
+                 
+                 if (!seenAlbumNames.has(album.name) && !isSingle) {
+                     seenAlbumNames.add(album.name);
+                     personalizedReleases.push(album);
+                     break;
+                 }
+             }
+         }
+      });
+
+      personalizedReleases.sort((a, b) => new Date(b.release_date || 0) - new Date(a.release_date || 0));
+      
+      const threeMonthsAgo = new Date();
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+      
+      recentReleases = personalizedReleases.filter(a => new Date(a.release_date || 0) >= threeMonthsAgo);
+      if (recentReleases.length < 25) {
+        recentReleases = personalizedReleases.slice(0, 25);
+      } else {
+        recentReleases = recentReleases.slice(0, 25);
+      }
+
+      topArtistsForUI = (longTermArtists?.items || []).slice(0, 20);
+
+      // Save to cache
+      newReleasesCache.set(cacheKey, { 
+        timestamp: Date.now(), 
+        data: recentReleases,
+        topArtists: topArtistsForUI
+      });
     }
 
     return NextResponse.json({
