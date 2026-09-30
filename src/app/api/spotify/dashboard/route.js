@@ -63,7 +63,7 @@ export async function GET(req) {
 
     return NextResponse.json({
       savedAlbums: savedAlbums.items?.map(i => i.album) || [],
-      newReleases: personalizedReleases.slice(0, 20), // Keep up to 20 recent releases
+      newReleases: personalizedReleases.slice(0, 25), // Keep up to 25 recent releases
       topArtists: (longTermArtists.items || []).slice(0, 20) // Display top 20 long-term artists on the UI
     });
   } catch (error) {
