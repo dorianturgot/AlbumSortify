@@ -9,7 +9,6 @@ const scopes = [
   "user-library-read",
   "user-top-read",
   "user-follow-read",
-  "user-read-playback-state",
 ].join(" ");
 
 const spotifyProfile = {
