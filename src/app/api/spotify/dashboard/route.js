@@ -40,7 +40,10 @@ export async function GET(req) {
        if (res && res.items && res.items.length > 0) {
            // Spotify returns them sorted by release date. Let's check the first few.
            for (const album of res.items) {
-               if (!seenAlbumNames.has(album.name)) {
+               // Spotify groups EPs and Singles both as "single". We filter out 1-2 track singles.
+               const isSingle = album.album_type === "single" && album.total_tracks < 3;
+               
+               if (!seenAlbumNames.has(album.name) && !isSingle) {
                    seenAlbumNames.add(album.name);
                    personalizedReleases.push(album);
                    // We only care about the very last release per artist to ensure diversity

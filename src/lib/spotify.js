@@ -74,7 +74,7 @@ export async function fetchTopArtists(userId, limit = 20, time_range = "medium_t
 }
 
 export async function fetchArtistAlbums(userId, artistId) {
-  return fetchWebApi(userId, `artists/${artistId}/albums?limit=50&include_groups=album`);
+  return fetchWebApi(userId, `artists/${artistId}/albums?limit=50&include_groups=album,single`);
 }
 
 export async function fetchArtist(userId, artistId) {

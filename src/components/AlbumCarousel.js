@@ -29,7 +29,16 @@ export default function AlbumCarousel({ items, userLists = [] }) {
               </div>
               <div className="mt-3">
                 <h4 className="font-bold text-sm truncate text-gray-100">{album.name}</h4>
-                <p className="text-xs text-gray-400 truncate">{album.artists.map(a => a.name).join(", ")}</p>
+                <p className="text-xs text-gray-400 truncate">{album.artists?.map(a => a.name).join(", ")}</p>
+                {album.release_date && (
+                  <p className="text-[10px] text-gray-500 font-medium mt-0.5">
+                    {new Date(album.release_date).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric"
+                    })}
+                  </p>
+                )}
               </div>
             </Link>
             <AddAlbumButton album={album} userLists={userLists} />
