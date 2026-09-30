@@ -73,6 +73,10 @@ export async function fetchTopArtists(userId, limit = 20, time_range = "medium_t
   return fetchWebApi(userId, `me/top/artists?limit=${limit}&time_range=${time_range}`);
 }
 
+export async function fetchFollowedArtists(userId, limit = 50) {
+  return fetchWebApi(userId, `me/following?type=artist&limit=${limit}`);
+}
+
 export async function fetchArtistAlbums(userId, artistId) {
   return fetchWebApi(userId, `artists/${artistId}/albums?limit=50&include_groups=album,single`);
 }

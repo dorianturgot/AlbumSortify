@@ -1,28 +1,46 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { fetchSavedAlbums, fetchNewReleases, fetchTopArtists, fetchArtistAlbums } from "@/lib/spotify";
+import { fetchSavedAlbums, fetchTopArtists, fetchArtistAlbums, fetchFollowedArtists } from "@/lib/spotify";
 
 export async function GET(req) {
   const session = await getServerSession(authOptions);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    // Fetch saved albums and top artists (short, medium, long term)
-    const [savedAlbums, shortTermArtists, mediumTermArtists, longTermArtists] = await Promise.all([
-      fetchSavedAlbums(session.user.id),
+    // Fetch saved albums, top artists, and followed artists
+    const [savedAlbumsExt, shortTermArtists, mediumTermArtists, longTermArtists, followedArtistsRes] = await Promise.all([
+      fetchSavedAlbums(session.user.id, 50),
       fetchTopArtists(session.user.id, 50, "short_term"),
       fetchTopArtists(session.user.id, 50, "medium_term"),
-      fetchTopArtists(session.user.id, 50, "long_term")
+      fetchTopArtists(session.user.id, 50, "long_term"),
+      fetchFollowedArtists(session.user.id, 50)
     ]);
 
-    // Combine and deduplicate artists
+    // Combine and deduplicate artists from all these sources
     const uniqueArtistsMap = new Map();
-    [...(shortTermArtists.items || []), ...(mediumTermArtists.items || []), ...(longTermArtists.items || [])].forEach(artist => {
-      if (!uniqueArtistsMap.has(artist.id)) {
+
+    const addArtist = (artist) => {
+      if (artist && artist.id && !uniqueArtistsMap.has(artist.id)) {
         uniqueArtistsMap.set(artist.id, artist);
       }
-    });
+    };
+
+    [...(shortTermArtists.items || []), ...(mediumTermArtists.items || []), ...(longTermArtists.items || [])].forEach(addArtist);
+    
+    // Add explicitly followed artists
+    if (followedArtistsRes && followedArtistsRes.artists && followedArtistsRes.artists.items) {
+      followedArtistsRes.artists.items.forEach(addArtist);
+    }
+
+    // Add artists from recently saved albums
+    if (savedAlbumsExt && savedAlbumsExt.items) {
+      savedAlbumsExt.items.forEach(item => {
+        if (item.album && item.album.artists) {
+          item.album.artists.forEach(addArtist);
+        }
+      });
+    }
     
     // Convert back to array (can be up to 100 artists)
     const allTopArtists = Array.from(uniqueArtistsMap.values());
@@ -69,7 +87,7 @@ export async function GET(req) {
     }
 
     return NextResponse.json({
-      savedAlbums: savedAlbums.items?.map(i => i.album) || [],
+      savedAlbums: savedAlbumsExt?.items?.slice(0, 20).map(i => i.album) || [],
       newReleases: recentReleases,
       topArtists: (longTermArtists.items || []).slice(0, 20) // Display top 20 long-term artists on the UI
     });
