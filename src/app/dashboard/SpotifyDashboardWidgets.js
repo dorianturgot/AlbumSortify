@@ -78,7 +78,7 @@ export default function SpotifyDashboardWidgets({ userLists }) {
             <Link key={artist.id} href={`/artist/${artist.id}`} className="flex flex-col items-center group flex-none">
               <div className="relative mb-3 inline-block">
                 <img 
-                  src={artist.images[0]?.url} 
+                  src={artist.images[1]?.url || artist.images[0]?.url} 
                   alt={artist.name} 
                   className="w-36 h-36 rounded-full object-cover shadow-lg group-hover:shadow-2xl group-hover:scale-105 transition-all duration-300" 
                 />

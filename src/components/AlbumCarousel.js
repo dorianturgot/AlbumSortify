@@ -21,7 +21,7 @@ export default function AlbumCarousel({ items, userLists = [], showDate = false 
             <Link href={album.uri || `spotify:album:${album.id}`} draggable="false">
               <div className="relative">
                 <img 
-                  src={album.images[0]?.url} 
+                  src={album.images[1]?.url || album.images[0]?.url} 
                   alt={album.name} 
                   draggable="false"
                   className="w-36 h-36 sm:w-40 sm:h-40 object-cover rounded-md shadow-lg group-hover:opacity-75 transition-opacity pointer-events-none select-none" 
