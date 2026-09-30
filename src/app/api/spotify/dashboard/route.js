@@ -8,13 +8,13 @@ export async function GET(req) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    // Fetch saved albums, top artists, and followed artists
+    // Fetch saved albums, top artists, and followed artists safely
     const [savedAlbumsExt, shortTermArtists, mediumTermArtists, longTermArtists, followedArtistsRes] = await Promise.all([
-      fetchSavedAlbums(session.user.id, 50),
-      fetchTopArtists(session.user.id, 50, "short_term"),
-      fetchTopArtists(session.user.id, 50, "medium_term"),
-      fetchTopArtists(session.user.id, 50, "long_term"),
-      fetchFollowedArtists(session.user.id, 50)
+      fetchSavedAlbums(session.user.id, 50).catch(() => null),
+      fetchTopArtists(session.user.id, 50, "short_term").catch(() => null),
+      fetchTopArtists(session.user.id, 50, "medium_term").catch(() => null),
+      fetchTopArtists(session.user.id, 50, "long_term").catch(() => null),
+      fetchFollowedArtists(session.user.id, 50).catch(() => null)
     ]);
 
     // Combine and deduplicate artists from all these sources
@@ -26,7 +26,7 @@ export async function GET(req) {
       }
     };
 
-    [...(shortTermArtists.items || []), ...(mediumTermArtists.items || []), ...(longTermArtists.items || [])].forEach(addArtist);
+    [...(shortTermArtists?.items || []), ...(mediumTermArtists?.items || []), ...(longTermArtists?.items || [])].forEach(addArtist);
     
     // Add explicitly followed artists
     if (followedArtistsRes && followedArtistsRes.artists && followedArtistsRes.artists.items) {
@@ -89,7 +89,7 @@ export async function GET(req) {
     return NextResponse.json({
       savedAlbums: savedAlbumsExt?.items?.slice(0, 20).map(i => i.album) || [],
       newReleases: recentReleases,
-      topArtists: (longTermArtists.items || []).slice(0, 20) // Display top 20 long-term artists on the UI
+      topArtists: (longTermArtists?.items || []).slice(0, 20) // Display top 20 long-term artists on the UI
     });
   } catch (error) {
     console.error("Failed to fetch dashboard widgets from Spotify:", error);
