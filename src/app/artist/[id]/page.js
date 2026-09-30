@@ -34,7 +34,10 @@ export default async function ArtistPage({ params }) {
   const uniqueAlbums = [];
   const seenNames = new Set();
   for (const album of albumsData.items) {
-    if (!seenNames.has(album.name)) {
+    // Spotify groups EPs and Singles both as "single". We filter out 1-2 track singles.
+    const isSingle = album.album_type === "single" && album.total_tracks < 3;
+    
+    if (!seenNames.has(album.name) && !isSingle) {
       seenNames.add(album.name);
       uniqueAlbums.push(album);
     }
@@ -85,7 +88,7 @@ export default async function ArtistPage({ params }) {
                 <Link href={album.uri || `spotify:album:${album.id}`} className="block">
                   <div className="relative overflow-hidden rounded-xl shadow-lg">
                     <img 
-                      src={album.images[0]?.url} 
+                      src={album.images[1]?.url || album.images[0]?.url} 
                       alt={album.name} 
                       className="w-full aspect-square object-cover transform group-hover:scale-110 transition-transform duration-500" 
                     />
