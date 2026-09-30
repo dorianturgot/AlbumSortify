@@ -22,14 +22,23 @@ async function refreshAccessToken(refreshToken) {
   return response.json();
 }
 
+const tokenCache = new Map();
+
 export async function getValidSpotifyToken(userId) {
+  const cached = tokenCache.get(userId);
+  const now = Math.floor(Date.now() / 1000);
+  
+  // Return from memory if we have a valid token (with 5 min buffer)
+  if (cached && cached.expires_at > now + 300) {
+    return cached.access_token;
+  }
+
   const account = await prisma.account.findFirst({
     where: { userId: userId, provider: "spotify" },
   });
 
   if (!account) throw new Error("No Spotify account linked");
 
-  const now = Math.floor(Date.now() / 1000);
   if (account.expires_at && account.expires_at < now) {
     const refreshedTokens = await refreshAccessToken(account.refresh_token);
 
@@ -42,9 +51,20 @@ export async function getValidSpotifyToken(userId) {
           refresh_token: refreshedTokens.refresh_token ?? account.refresh_token, 
         },
       });
+      
+      tokenCache.set(userId, {
+        access_token: refreshedTokens.access_token,
+        expires_at: now + refreshedTokens.expires_in
+      });
+      
       return refreshedTokens.access_token;
     }
   }
+
+  tokenCache.set(userId, {
+    access_token: account.access_token,
+    expires_at: account.expires_at
+  });
 
   return account.access_token;
 }
