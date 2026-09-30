@@ -69,8 +69,8 @@ export async function fetchNewReleases(userId, limit = 20) {
   return fetchWebApi(userId, `browse/new-releases?offset=0&limit=${limit}`);
 }
 
-export async function fetchTopArtists(userId) {
-  return fetchWebApi(userId, `me/top/artists`);
+export async function fetchTopArtists(userId, limit = 20, time_range = "medium_term") {
+  return fetchWebApi(userId, `me/top/artists?limit=${limit}&time_range=${time_range}`);
 }
 
 export async function fetchArtistAlbums(userId, artistId) {
