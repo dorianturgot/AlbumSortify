@@ -6,6 +6,22 @@ import Link from "next/link";
 import { FaArrowLeft, FaMusic } from "react-icons/fa";
 import AddAlbumButton from "@/components/AddAlbumButton";
 
+export async function generateMetadata({ params }) {
+  const session = await getServerSession(authOptions);
+  if (!session) return { title: "Artist | AlbumSortify" };
+
+  const { id } = await params;
+  try {
+    const artist = await fetchArtist(session.user.id, id);
+    return {
+      title: `${artist.name} | AlbumSortify`,
+      description: `View ${artist.name}'s discography on AlbumSortify.`
+    };
+  } catch (e) {
+    return { title: "Artist | AlbumSortify" };
+  }
+}
+
 export default async function ArtistPage({ params }) {
   const session = await getServerSession(authOptions);
   if (!session) {

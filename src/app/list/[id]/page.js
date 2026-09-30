@@ -11,6 +11,22 @@ import EditListButton from "./EditListButton";
 import ShareListButton from "./ShareListButton";
 import SortableCollection from "./SortableCollection";
 
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  try {
+    const list = await prisma.albumList.findUnique({
+      where: { id },
+    });
+    if (!list) return { title: "List | AlbumSortify" };
+    return {
+      title: `${list.name} | AlbumSortify`,
+      description: `View the ${list.name} collection on AlbumSortify.`
+    };
+  } catch (e) {
+    return { title: "List | AlbumSortify" };
+  }
+}
+
 export default async function ListPage({ params }) {
   const session = await getServerSession(authOptions);
   const { id } = await params;
