@@ -41,18 +41,27 @@ export async function GET(req) {
         }
       };
 
-      [...(shortTermArtists?.items || []), ...(mediumTermArtists?.items || []), ...(longTermArtists?.items || [])].forEach(addArtist);
-      
-      if (followedArtistsRes && followedArtistsRes.artists && followedArtistsRes.artists.items) {
-        followedArtistsRes.artists.items.forEach(addArtist);
-      }
-
+      // 1. Add artists from recently saved albums FIRST to guarantee they aren't cut off by the limit
       if (savedAlbumsExt && savedAlbumsExt.items) {
         savedAlbumsExt.items.forEach(item => {
           if (item.album && item.album.artists) {
             item.album.artists.forEach(addArtist);
           }
         });
+      }
+
+      // 2. Add short term top artists (currently listening a lot)
+      if (shortTermArtists?.items) shortTermArtists.items.forEach(addArtist);
+
+      // 3. Add medium term top artists
+      if (mediumTermArtists?.items) mediumTermArtists.items.forEach(addArtist);
+
+      // 4. Add long term top artists
+      if (longTermArtists?.items) longTermArtists.items.forEach(addArtist);
+      
+      // 5. Add explicitly followed artists
+      if (followedArtistsRes && followedArtistsRes.artists && followedArtistsRes.artists.items) {
+        followedArtistsRes.artists.items.forEach(addArtist);
       }
       
       // Convert back to array and limit to max 80 artists to avoid network overload
