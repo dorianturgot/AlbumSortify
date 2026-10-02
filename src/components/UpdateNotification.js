@@ -60,7 +60,7 @@ export default function UpdateNotification() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full right-0 mt-3 w-80 bg-[#1a1a1a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="fixed left-4 right-4 top-20 sm:absolute sm:left-auto sm:top-full sm:right-0 sm:mt-3 sm:w-80 bg-[#1a1a1a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="bg-white/5 px-4 py-3 border-b border-white/10 flex justify-between items-center">
             <h3 className="font-bold text-white">What's new?</h3>
             <span className="text-[10px] uppercase font-bold tracking-wider text-green-400 bg-green-400/10 px-2 py-0.5 rounded-full">
